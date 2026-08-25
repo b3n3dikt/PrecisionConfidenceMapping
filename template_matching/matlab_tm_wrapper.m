@@ -42,7 +42,7 @@ overlap_method = 'smooth_then_derivative';
 % REMOVE_OUTLIERS=0 (run_PCM.sh's --remove-outliers flag) to skip the
 % standard-deviation-based outlier removal cifti_conn_matrix_for_wrapper_continous
 % does on top of FD-based motion censoring.
-remove_outliers = ~strcmp(getenv('REMOVE_OUTLIERS'), '0');
+remove_outliers = double(~strcmp(getenv('REMOVE_OUTLIERS'), '0'));
 additional_mask = 'none';
 
 %check input format

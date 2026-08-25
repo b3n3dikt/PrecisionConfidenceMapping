@@ -77,7 +77,7 @@ if strcmp(shuffle_option, 'run')
         for i = 1:num_permutations
             shuffled_order_matrix(i, :) = run_numbers(randperm(numel(run_numbers)));
         end
-        save(mat_file_path, 'shuffled_order_matrix');
+        atomic_save(mat_file_path, 'shuffled_order_matrix', shuffled_order_matrix);
     end
 
     run_order = shuffled_order_matrix(permnum, :);
@@ -134,7 +134,7 @@ elseif strcmp(shuffle_option, 'percent')
         for i = 1:num_permutations
             shuffled_percent_order(i, :) = randperm(num_chunks);
         end
-        save(shuffled_mat_path, 'shuffled_percent_order');
+        atomic_save(shuffled_mat_path, 'shuffled_percent_order', shuffled_percent_order);
     end
 
     percent_order = shuffled_percent_order(permnum, :);
@@ -156,7 +156,7 @@ elseif strcmp(shuffle_option, 'minutes')
         for i = 1:num_permutations
             shuffled_minute_order(i, :) = randperm(num_chunks);
         end
-        save(shuffled_mat_path, 'shuffled_minute_order');
+        atomic_save(shuffled_mat_path, 'shuffled_minute_order', shuffled_minute_order);
     end
 
     minute_order = shuffled_minute_order(permnum, :);
@@ -177,7 +177,7 @@ elseif strcmp(shuffle_option, 'TRs')
         for i = 1:num_permutations
             shuffled_TR_order(i, :) = randperm(num_chunks);
         end
-        save(shuffled_mat_path, 'shuffled_TR_order');
+        atomic_save(shuffled_mat_path, 'shuffled_TR_order', shuffled_TR_order);
     end
 
     TR_order = shuffled_TR_order(permnum, :);
@@ -194,7 +194,7 @@ elseif strcmp(shuffle_option, 'bootstrap')
         for i = 1:num_permutations
             shuffled_TR_order(i, :) = randi(total_good_TRs, 1, total_good_TRs); % Random indices with replacement
         end
-        save(shuffled_mat_path, 'shuffled_TR_order');
+        atomic_save(shuffled_mat_path, 'shuffled_TR_order', shuffled_TR_order);
     end
     TR_order = shuffled_TR_order(permnum, :);
     rearranged_data = data(:, TR_order);
@@ -219,7 +219,7 @@ elseif strcmp(shuffle_option, 'bagging')
         for i = 1:num_permutations
             shuffled_TR_order(i, :) = randi(num_good_frames, 1, desired_TRs);
         end
-        save(shuffled_mat_path, 'shuffled_TR_order');
+        atomic_save(shuffled_mat_path, 'shuffled_TR_order', shuffled_TR_order);
     end
 
     TR_order = shuffled_TR_order(permnum, :);
@@ -269,7 +269,7 @@ elseif strcmp(shuffle_option, 'bootstrap_variable')
             shuffled_TR_order(i, :) = randi(total_good_TRs, 1, total_good_TRs);
             variable_lengths(i)     = randi([min_frames, total_good_TRs]);
         end
-        save(shuffled_mat_path, 'shuffled_TR_order', 'variable_lengths');
+        atomic_save(shuffled_mat_path, 'shuffled_TR_order', shuffled_TR_order, 'variable_lengths', variable_lengths);
     end
 
     TR_order  = shuffled_TR_order(permnum, :);
@@ -327,7 +327,7 @@ elseif strcmp(shuffle_option, 'subsample')
             subsample_lengths(i) = seg_len;
             subsample_starts(i)  = randi(max(1, total_good_TRs - seg_len + 1));
         end
-        save(shuffled_mat_path, 'subsample_lengths', 'subsample_starts');
+        atomic_save(shuffled_mat_path, 'subsample_lengths', subsample_lengths, 'subsample_starts', subsample_starts);
     end
 
     seg_len   = subsample_lengths(permnum);
@@ -485,6 +485,31 @@ writematrix(mask_holdout, [infolder '/masks_holdout/sub-' SUB '_ses-' SES '_mask
 
 fprintf('Result: %f, %f\n', holdout_MINs, TotalGoodMins);
 
+end
+
+
+function atomic_save(final_path, varargin)
+    % Save name/value pairs to final_path without other permutations ever
+    % observing a partially-written file.
+    %
+    % WHY: several shuffle-order cache files above are shared across all
+    % permutations of a run (checked with exist(), built once, reused after).
+    % orchestrate_PCM.sh submits every permutation back-to-back, so on the
+    % very first run for a given subject/session/truncation, two or more
+    % permutations can all see the cache missing and race to build it
+    % simultaneously. A plain save() lets one process's load() catch another
+    % mid-write and read a truncated .mat ("Not a binary MAT-file"). Writing
+    % to a unique temp file first, then renaming, avoids that: rename is
+    % atomic on the same filesystem, so a concurrent reader either sees the
+    % old (missing) name or the fully-written new one -- never a partial
+    % file. If two processes both lose the race and both rename onto the
+    % same final_path, one's (equally valid, self-consistent) cache table
+    % silently wins over the other's -- harmless, since either table is
+    % complete and correct on its own.
+    S = struct(varargin{:});
+    tmp_path = sprintf('%s.tmp-%d-%d', final_path, feature('getpid'), round(rand() * 1e9));
+    save(tmp_path, '-struct', 'S');
+    movefile(tmp_path, final_path);
 end
 
 
