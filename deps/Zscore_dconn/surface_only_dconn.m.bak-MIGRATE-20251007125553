@@ -1,0 +1,94 @@
+function [output_cifti_name] = surface_only_dconn(input_cifti_name,output_cifti_name,path_wb_c,template_path)
+if isdeployed
+addpath(genpath('/home/faird/shared/code/internal/utilities/Matlab_CIFTI/'));
+addpath(genpath('/home/faird/shared/code/external/utilities/gifti-1.6/gifti-1.6'));
+else
+end
+
+%path_wb_c='/home/faird/shared/code/external/utilities/workbench/1.4.2/workbench/bin_rh_linux64/wb_command';
+
+% if exist(input_cifti_name,'file') == 0
+%     disp(['Subject series ' num2str(i) ' does not exist'])
+%     return
+% else
+% end
+
+if strcmp(output_cifti_name,'inferred') == 1
+    short_file_name = char(input_cifti_name(1:end-10)); %(i.e. remove ".dconn.nii");
+    output_cifti_name = [short_file_name 'surface_only'];
+else
+    disp('output_cifti_name must be provided or type "inferred" and it will be placed in the same location.');
+end
+
+if exist([output_cifti_name '.dconn.nii'],'file') == 0
+    
+    disp('loading cifti');
+    tic
+    newcii = ciftiopen(input_cifti_name,path_wb_c);
+    dconn=single(newcii.cdata);
+    toc
+    
+     if size(dconn,1) == 59412
+     disp('dconn is already surface only')
+     newdconn=dconn;
+     else
+    %clear newcii; %save memory
+    disp ('sectioning dconn')
+    newdconn=single(zeros(59412,59412));
+    newdconn(1:59412,1:59412) = dconn(1:59412,1:59412);
+    % LL = dconn(1:29696,1:29696);
+    % LR = dconn(29697:59412,1:29696);
+    % LS = dconn(59413:91282,1:29696);
+    % RL = dconn(1:29696,29697:59412);
+    % RR = dconn(29697:59412,29697:59412);
+    % RS = dconn(59413:91282,29697:59412);
+    % SL = dconn(1:29696,59413:91282);
+    % SR = dconn(29697:59412,59413:91282);
+    % SS = dconn(59413:91282,59413:91282);
+    
+    
+    % disp('rewriting matrix')
+    % newdconn=single(zeros(91282,91282));
+    % newdconn(1:29696,1:29696) = ZLLmat;
+    % newdconn(29697:59412,1:29696) = ZLRmat;
+    % newdconn(59413:91282,1:29696) = ZLSmat;
+    % newdconn(1:29696,29697:59412) = ZRLmat;
+    % newdconn(29697:59412,29697:59412) = ZRRmat;
+    % newdconn(59413:91282,29697:59412) = ZRSmat;
+    % newdconn(1:29696,59413:91282) = ZSLmat;
+    % newdconn(29697:59412,59413:91282) = ZSRmat;
+    % newdconn(59413:91282,59413:91282) = ZSSmat;
+     end
+    clear dconn
+    
+    %open a new cifti file that has the subcorticals removed.
+    if isempty(template_path)
+        try
+            newcii = ciftiopen(settings.path{7},path_wb_c);
+        catch
+            disp('unable to open default template path. trying to hardcoded MSI path to filefile...')
+            newcii = ciftiopen('/home/faird/shared/code/internal/utilities/community_detection/fair/supporting_files/120_LR_minsize400_recolored_manualconsensus4.dconn.nii',path_wb_c);
+        end
+    else
+    newcii = ciftiopen(template_path,path_wb_c);
+    end
+    %newcii = ciftiopen('/home/exacloud/lustre1/fnl_lab/code/internal/utilities/community_detection/fair/supporting_files/120_LR_minsize400_recolored_manualconsensus4.dconn.nii',path_wb_c);
+    newcii.cdata = newdconn;
+    %addpath('/mnt/max/shared/code/internal/utilities/corr_pt_dt/support_files');
+    disp('Saving new cortex only dconn')
+    
+    save(newcii, [output_cifti_name '.gii'], 'ExternalFileBinary')
+    disp('Converting converting cortex-only  dconn .gii to .nii')
+    system([path_wb_c ' -cifti-convert -from-gifti-ext ' output_cifti_name '.gii ' output_cifti_name '.dconn.nii' ]);
+    disp('Removing .gii')
+    system(['rm -f ' output_cifti_name '.gii']);
+    system(['rm -f ' output_cifti_name '.dat']);
+    
+    output_cifti_name = [output_cifti_name '.dconn.nii']; %return teoutput name with the extension.
+else
+    
+end
+
+disp('Done coverting Dconn to surface_only Dconn.')
+
+end

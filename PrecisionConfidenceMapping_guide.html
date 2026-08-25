@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PrecisionConfidenceMapping – User Guide</title>
+<style>
+  body { font-family: 'Segoe UI', Arial, sans-serif; max-width: 1100px; margin: 40px auto; color: #1a1a2e; background: #f5f7fa; line-height: 1.65; }
+  h1 { color: #16213e; border-bottom: 3px solid #0f3460; padding-bottom: 10px; }
+  h2 { color: #0f3460; border-bottom: 2px solid #e94560; margin-top: 40px; padding-bottom: 6px; }
+  h3 { color: #e94560; margin-top: 28px; }
+  h4 { color: #533483; margin-top: 18px; }
+  .toc { background: #e8edf5; border-radius: 8px; padding: 18px 28px; margin-bottom: 30px; }
+  .toc a { color: #0f3460; text-decoration: none; display: block; margin: 4px 0; }
+  .toc a:hover { color: #e94560; text-decoration: underline; }
+  .toc .indent { margin-left: 20px; }
+  .toc .indent2 { margin-left: 40px; }
+  .step-box { border-left: 5px solid #0f3460; background: #fff; padding: 16px 20px; margin: 18px 0; border-radius: 0 8px 8px 0; box-shadow: 0 2px 6px rgba(0,0,0,0.07); }
+  .step-box.step1 { border-color: #0f3460; }
+  .step-box.step2 { border-color: #533483; }
+  .step-box.step3 { border-color: #e94560; }
+  .step-box.step4 { border-color: #1a8a6e; }
+  .step-box.step5 { border-color: #d4700a; }
+  .output-box { background: #1a1a2e; color: #d0e8ff; border-radius: 8px; padding: 18px 22px; margin: 16px 0; font-family: monospace; font-size: 0.86em; line-height: 2.0; white-space: nowrap; overflow-x: auto; }
+  .output-box .dir  { color: #7ecfff; font-weight: bold; }
+  .output-box .file { color: #b0f0b0; }
+  .output-box .note { color: #9aa7c0; font-style: italic; }
+  .output-box .rt   { color: #c9b8ff; }
+  .file-tag { background: #16213e; color: #e0f0ff; font-family: monospace; font-size: 0.88em; padding: 2px 7px; border-radius: 4px; }
+  .param-tag { background: #533483; color: #f0e6ff; font-family: monospace; font-size: 0.88em; padding: 2px 7px; border-radius: 4px; }
+  .warn { background: #fff3cd; border: 1px solid #ffc107; border-radius: 6px; padding: 10px 16px; margin: 12px 0; }
+  .tip  { background: #e8f4fd; border: 1px solid #0f3460; border-radius: 6px; padding: 10px 16px; margin: 12px 0; }
+  .note { background: #f0f0ff; border: 1px solid #533483; border-radius: 6px; padding: 10px 16px; margin: 12px 0; }
+  .warning { background: #fff4e5; border: 1px solid #b8860b; border-radius: 6px; padding: 10px 16px; margin: 12px 0; }
+  .flow { text-align: center; font-size: 1.8em; color: #0f3460; margin: 4px 0; line-height: 1.2; }
+  .flow-branch { display: flex; gap: 20px; margin: 8px 0; }
+  .flow-branch .branch { flex: 1; border-left: 5px solid #e94560; background: #fff; padding: 12px 16px; border-radius: 0 8px 8px 0; box-shadow: 0 2px 6px rgba(0,0,0,0.07); }
+  .flow-branch .branch.reprotm { border-color: #5a4fcf; background: #f4f2ff; }
+  .flow-branch .branch-label { font-weight: bold; font-size: 0.9em; margin-bottom: 6px; }
+  table { border-collapse: collapse; width: 100%; margin: 14px 0; }
+  th { background: #0f3460; color: white; padding: 9px 12px; text-align: left; }
+  td { padding: 8px 12px; border-bottom: 1px solid #ddd; vertical-align: top; }
+  tr:nth-child(even) { background: #f0f4f8; }
+  code { background: #eef; font-family: monospace; padding: 1px 5px; border-radius: 3px; font-size: 0.9em; }
+  pre { background: #1a1a2e; color: #e0e8ff; padding: 14px; border-radius: 6px; overflow-x: auto; font-size: 0.88em; line-height: 1.6; }
+  .section-divider { border: none; border-top: 2px dashed #ccd; margin: 40px 0; }
+  .badge-rec  { background: #0f3460; color: white; font-size: 0.72em; padding: 2px 7px; border-radius: 10px; vertical-align: middle; margin-left: 6px; }
+  .badge-rt   { background: #5a4fcf; color: white; font-size: 0.72em; padding: 2px 7px; border-radius: 10px; vertical-align: middle; margin-left: 6px; }
+  .how-flag { color: #1a8a6e; font-weight: bold; }
+  .how-edit { color: #533483; font-weight: bold; }
+  ul li { margin: 4px 0; }
+</style>
+</head>
+<body>
+
+<h1>PrecisionConfidenceMapping – User Guide</h1>
+<p><em>Precision Confidence Mapping (PCM) — how to set up, run, and interpret outputs. Supports two community-detection methods: MATLAB template matching and ReproTM (Python template matching).</em></p>
+
+<div class="toc">
+  <strong>Table of Contents</strong>
+  <a href="#what-is-pcm">1. What is PCM?</a>
+  <a href="#setup">2. Setup</a>
+  <a href="#setup-get" class="indent">2a. Get the code (point to it, or copy it)</a>
+  <a href="#setup-fetch-matlab-tm" class="indent">2b. Fetch matlab_tm (one-time, required)</a>
+  <a href="#setup-fetch-reprotm" class="indent">2c. Fetch ReproTM (one-time, optional)</a>
+  <a href="#setup-cluster" class="indent">2d. Configure cluster.conf</a>
+  <a href="#setup-run" class="indent">2e. Set your inputs (run_PCM.sh or flags)</a>
+  <a href="#running">3. Running PCM</a>
+  <a href="#parameters">4. Parameter Reference</a>
+  <a href="#param-core" class="indent">4a. Required inputs</a>
+  <a href="#param-optional" class="indent">4b. Optional subject/session/task labels</a>
+  <a href="#param-method" class="indent">4c. Community detection method</a>
+  <a href="#param-reprotm" class="indent">4d. ReproTM settings</a>
+  <a href="#param-dconn" class="indent">4e. Shared dconn settings</a>
+  <a href="#param-motion" class="indent">4f. Motion options</a>
+  <a href="#param-interp" class="indent">4g. Spatial noise interpolation</a>
+  <a href="#param-shuffle" class="indent">4h. Shuffle options</a>
+  <a href="#param-modes" class="indent">4i. Analysis mode flags</a>
+  <a href="#param-template" class="indent">4j. Network templates</a>
+  <a href="#param-time" class="indent">4k. Time truncation</a>
+  <a href="#param-slurm" class="indent">4l. SLURM resources</a>
+  <a href="#param-combined" class="indent">4m. Combined figures</a>
+  <a href="#pipeline-flow">5. What happens when you run</a>
+  <a href="#outputs">6. Outputs</a>
+  <a href="#output-key" class="indent">6a. Key output files</a>
+  <a href="#output-tree" class="indent">6b. Full output tree</a>
+  <a href="#requirements">7. Requirements</a>
+  <a href="#troubleshooting">8. Troubleshooting</a>
+  <a href="#directory">9. Directory Layout</a>
+</div>
+
+<!-- ===== SECTION 1 ===== -->
+<h2 id="what-is-pcm">1. What is PCM?</h2>
+<p>Precision Confidence Mapping answers the question: <em>"How confidently can we assign each brain vertex to a functional network, given a finite amount of fMRI data?"</em></p>
+
+<p>It works by:</p>
+<ol>
+  <li>Taking a subject's fMRI time series and shuffling the timepoints <strong>N times</strong> (bootstrap)</li>
+  <li>Running community detection on each shuffled version</li>
+  <li>Tallying, across all N permutations, how often each vertex was assigned to each network</li>
+</ol>
+
+<p>The result is a <strong>probability/confidence map</strong> per network: vertices with values near 1.0 have stable, reliable assignments; vertices near 0.5 are ambiguous. A <strong>mode map</strong> shows the single most common assignment at each vertex.</p>
+
+<p>PrecisionConfidenceMapping supports two community detection algorithms, selected with the <code>METHOD</code> parameter:</p>
+<table>
+  <tr><th>METHOD</th><th>Algorithm</th><th>Best for</th></tr>
+  <tr>
+    <td><code>matlab_tm</code> <span class="badge-rec">default</span></td>
+    <td>MATLAB template matching — correlates each vertex's time series against network seed maps; assigns to highest-correlation network</td>
+    <td>Fast runs, well-validated results, standard PCM output</td>
+  </tr>
+  <tr>
+    <td><code>reprotm</code></td>
+    <td>Python template matching (ReproTM, Godfrey et al.) — builds a z-scored dconn per permutation, winner-take-all matches each greyordinate to a network seed map, then min-size cluster cleanup</td>
+    <td>Reproducible Python TM, optional SCAN refinement</td>
+  </tr>
+</table>
+
+<p>Both methods write output to the same <code>.conc</code> format (each perm published as <code>*_recolored.dscalar.nii</code>), so the figure-making code (probability maps, mode maps, surface images) works identically for both. A full list of what you need installed is in <a href="#requirements">Section 7 — Requirements</a>.</p>
+
+<div class="warning">⚠️ <strong>In-development notice:</strong> <code>matlab_tm</code> is the original PCM method — extensively tested and the basis of published results. <code>reprotm</code> is a newer addition with less cluster-testing history; treat its outputs as provisional and inspect them carefully before relying on them.</div>
+
+<!-- ===== SECTION 2 ===== -->
+<h2 id="setup">2. Setup</h2>
+<p>PrecisionConfidenceMapping bundles almost everything it needs: network templates and figure utilities all ship inside the folder. One piece is fetched separately instead of vendored for licensing reasons — <code>matlab_tm</code>'s core code (Section 2b, one-time, required since <code>matlab_tm</code> is the default method) — and ReproTM's core code is fetched too, since PCM doesn't vendor a copy of that either (Section 2c, one-time, optional — only if you use <code>METHOD=reprotm</code>). Both are a single script; neither requires an account or manual download. Beyond that, setup is mostly about telling PCM <em>where</em> to run (your cluster account/partitions) and <em>what</em> to run on (your data).</p>
+
+<div class="step-box step1" id="setup-get">
+  <h3>2a. Get the code — you usually don't need the whole folder</h3>
+  <p>If your group already maintains a shared install of PrecisionConfidenceMapping on the server, <strong>you can point to it directly</strong> — there is no need to copy the whole package. For example, on MSI:</p>
+  <pre>/projects/standard/faird/shared/code/internal/analytics/PrecisionConfidenceMapping/</pre>
+  <p>Pick the option that matches what you need:</p>
+  <table>
+    <tr><th>Your situation</th><th>What to do</th></tr>
+    <tr>
+      <td><strong>Using the defaults + optional flags</strong> (most users)</td>
+      <td>Don't copy anything heavy. Either run the shared <code>run_PCM.sh</code> directly with flags, or copy just <span class="file-tag">run_PCM.sh</span> and <span class="file-tag">cluster.conf</span> into your study folder and edit those. PCM finds the rest of the package automatically.</td>
+    </tr>
+    <tr>
+      <td><strong>Editing run_PCM.sh / cluster.conf settings</strong></td>
+      <td>Copy <code>run_PCM.sh</code> and <code>cluster.conf</code> into your study directory and edit them there. PCM <strong>prioritizes the copies in your run directory</strong> over the ones in the base install, so your edits never touch the shared package.</td>
+    </tr>
+    <tr>
+      <td><strong>Editing the deeper pipeline code</strong> (rare)</td>
+      <td>Copy the whole folder so you have your own version to modify:<br><code>scp -r PrecisionConfidenceMapping/ yourserver:/path/to/destination/</code></td>
+    </tr>
+  </table>
+  <div class="tip">
+    💡 If you copy <code>run_PCM.sh</code> out of the package, set <code>PCM_DIR</code> at the top of it to the base install path so it can find the bundled code:
+    <pre>PCM_DIR="/projects/.../PrecisionConfidenceMapping"</pre>
+  </div>
+</div>
+
+<div class="step-box step2" id="setup-fetch-matlab-tm">
+  <h3>2b. Fetch matlab_tm <span class="badge-rec">required — matlab_tm is the default method</span></h3>
+  <p><code>METHOD="matlab_tm"</code> is PCM's default, but its core code is <strong>not</strong> bundled in this package. <code>template_matching_RH.m</code> (R. Hermosillo / UMN) is licensed for non-profit/research use only, with no redistribution without approval — so instead of vendoring a copy, PCM fetches it directly from its public home at setup time. Run this once, before your first <code>METHOD=matlab_tm</code> run:</p>
+  <pre>bash code/setup_matlab_tm.sh</pre>
+  <p>This clones <code>DCAN-Labs/compare_matrices_to_assign_networks</code> (<a href="https://github.com/DCAN-Labs/compare_matrices_to_assign_networks">github.com/DCAN-Labs/compare_matrices_to_assign_networks</a>) into <code>deps/matlab_tm/</code> at a pinned commit, then applies PCM's patch on top — fixes a crash caused by the bundled <code>cifti-matlab</code> library returning a different data type than the original code expected, a probable pre-existing bug in a threshold-tiling calculation, and strips a couple of hardcoded server paths. See <code>patches/template_matching_RH.patch</code> for the full explanation of each change, and its accompanying <code>LICENSE.txt</code> (fetched alongside it into <code>deps/matlab_tm/</code>) for the terms governing that code.</p>
+  <div class="warn">
+    ⚠️ <strong>Run this on a login node or your own workstation — not inside a SLURM job.</strong> Compute nodes are frequently firewalled off from the internet on HPC clusters, so this can't happen automatically mid-pipeline. If you forget this step, <code>run_PCM.sh</code> fails fast with a reminder before submitting any jobs, rather than partway through a permutation.
+  </div>
+  <div class="tip">
+    💡 Safe to re-run — does nothing if <code>deps/matlab_tm/</code> is already set up correctly. Pass <code>--force</code> to wipe it and re-fetch from scratch. Only needed for <code>METHOD=matlab_tm</code>; skip this if you only ever use <code>reprotm</code> (Section 2c, its own setup step).
+  </div>
+</div>
+
+<div class="step-box step3" id="setup-fetch-reprotm">
+  <h3>2c. Fetch ReproTM <span class="badge-rt">optional — only for METHOD=reprotm</span></h3>
+  <p>Only needed if you plan to use <code>METHOD=reprotm</code>. Unlike matlab_tm, ReproTM (Godfrey et al.) has no license restricting redistribution — it's just missing a <code>LICENSE</code> file — so this step offers a choice of two modes instead of matlab_tm's one:</p>
+  <pre>bash code/setup_reprotm.sh              # --pinned (default): known-good commit,
+                                         # compatibility patches applied
+bash code/setup_reprotm.sh --latest     # current upstream HEAD instead</pre>
+  <p>Both clone into <code>deps/reprotm_fetched/</code>, picked up automatically — no <code>cluster.conf</code> edit needed unless you want to override it (Section 2d).</p>
+  <table>
+    <tr><th>Mode</th><th>What it does</th><th>Trade-off</th></tr>
+    <tr><td><code>--pinned</code> <span class="badge-rec">default</span></td><td>Clones a specific commit PCM has verified works; applies known compatibility fixes unconditionally.</td><td>Guaranteed to work — immune to Kate restructuring the codebase later. Won't pick up her improvements automatically.</td></tr>
+    <tr><td><code>--latest</code></td><td>Clones current upstream <code>HEAD</code>. Each fix is tried first and only applied if still needed — anything Kate's already fixed upstream is skipped automatically, with a message.</td><td>Gets her improvements as she ships them. If she's changed a lot since the pin, something might not work — you'd fix it by hand (see <code>deps/reprotm/COMPATIBILITY_NOTES.md</code>).</td></tr>
+  </table>
+  <div class="tip">
+    💡 Safe to re-run in the same mode — does nothing if already set up. Switching modes (or an unexpected existing state) requires <code>--force</code> to wipe and re-fetch. Prefer to manage your own ReproTM install instead of using this script at all? That still works — see <code>deps/reprotm/README.md</code> and set <code>REPROTM_DIR</code> yourself in <code>cluster.conf</code> (Section 2d), which overrides the fetched default.
+  </div>
+</div>
+
+<div class="step-box step4" id="setup-cluster">
+  <h3>2d. Configure cluster.conf <span class="badge-rec">most important step</span></h3>
+  <p>Edit <span class="file-tag">cluster.conf</span> with your cluster's account, partitions, and module names. PCM reads the copy in your run directory first, then falls back to the base install — so keep a copy per study and you'll never edit the shared one:</p>
+  <pre>SLURM_PARTITION="msismall,ag2tb"   # check: sinfo -s
+SLURM_ACCOUNT="yourgroup"           # check: sacctmgr show user
+MATLAB_MODULE="matlab/R2019a"       # check: module avail matlab
+WORKBENCH_MODULE="workbench"        # check: module avail workbench
+
+# Only for METHOD=reprotm — OPTIONAL override. Leave commented out to use the
+# copy `bash code/setup_reprotm.sh` fetches for you (Section 2c). Only set this
+# if you want your own separately managed ReproTM install instead:
+# REPROTM_DIR="/path/to/your/ReproTM"
+
+# Also only for METHOD=reprotm — a python that has nibabel + scipy + numpy.
+# The cluster's default python3 usually lacks nibabel; point this at a conda env
+# (call its python by absolute path — batch jobs don't source your ~/.bashrc):
+REPROTM_PYTHON="/projects/.../miniconda3/mini3/bin/python"
+
+# SLURM resource sizing (per-method + auxiliary jobs) — optional, sensible
+# defaults ship already. See Section 4l for the full list of variables.
+MATLABTM_MEM="128gb"   REPROTM_MEM="200gb"</pre>
+  <div class="tip">
+    💡 The bundled scripts and templates ship with the package — you do <strong>not</strong> need to verify they are present. The thing that lives <em>outside</em> the package, and therefore needs configuring here, is <code>REPROTM_DIR</code>/<code>REPROTM_PYTHON</code> (reprotm). Unlike matlab_tm's fetch, PCM does not vendor a copy of ReproTM at all — see Section 4d and <code>deps/reprotm/README.md</code>. SLURM resource sizing (Section 4l) also lives here now — most users won't need to touch it, since the shipped defaults already match what <code>run_PCM.sh</code> used to hardcode.
+  </div>
+</div>
+
+<div class="step-box step5" id="setup-run">
+  <h3>2e. Set your inputs — in run_PCM.sh or as flags</h3>
+  <p>You can provide inputs either by editing the USER SETTINGS block of <span class="file-tag">run_PCM.sh</span>, or by passing them as command-line flags (handy for one-off runs). Flags override the file.</p>
+  <pre># ── In run_PCM.sh USER SETTINGS, or as --flags ──
+dtseries="/path/to/sub-001_ses-01_task-rest_bold.dtseries.nii"
+motion_file="/path/to/motion.mat"    # .mat | .hdf5 (auto-converted) | .txt (0/1 mask)
+surf_L="/path/to/hemi-L_midthickness.surf.gii"
+surf_R="/path/to/hemi-R_midthickness.surf.gii"
+BASEDIR="/path/to/outputs/"          # output ROOT only — see note below
+
+METHOD="matlab_tm"                   # matlab_tm | reprotm</pre>
+  <div class="tip">
+    💡 <strong>SUB, SES, and TASK are auto-parsed</strong> from the dtseries filename when it follows BIDS naming (e.g. <code>sub-001_ses-01_task-rest_bold.dtseries.nii</code>). Only set them explicitly (file or <code>--sub/--ses/--task</code>) if your filename is not BIDS-formatted.
+  </div>
+  <div class="warn">
+    ⚠️ <strong>Do not put sub/ses in <code>BASEDIR</code>.</strong> It is just the output <em>root</em> — PCM appends <code>sub-XXX/ses-YYY/task-…</code> itself. Use <code>--basedir /path/to/outputs/</code>, not <code>.../outputs/sub-001/ses-01</code>.
+  </div>
+</div>
+
+<!-- ===== SECTION 3 ===== -->
+<h2 id="running">3. Running PCM</h2>
+<p>Every run needs the five required inputs (dtseries, motion, surf-L, surf-R, basedir) — whether set in <code>run_PCM.sh</code> or passed as flags. The method and other options are layered on top.</p>
+
+<h3>Standard run (full dataset, matlab_tm)</h3>
+<div class="tip">
+  💡 First time using <code>METHOD=matlab_tm</code> (the default)? Run <code>bash code/setup_matlab_tm.sh</code> once first — see Section 2b. <code>run_PCM.sh</code> will remind you if you forget.
+</div>
+<pre># If the USER SETTINGS in run_PCM.sh are filled in:
+sbatch run_PCM.sh
+
+# Or pass everything as flags (BIDS dtseries → sub/ses/task auto-parsed):
+sbatch run_PCM.sh \
+    --dtseries /path/to/data/sub-001_ses-01_task-rest_bold.dtseries.nii \
+    --motion   /path/to/data/motion.mat \
+    --surf-l   /path/to/data/hemi-L_midthickness.surf.gii \
+    --surf-r   /path/to/data/hemi-R_midthickness.surf.gii \
+    --basedir  /path/to/outputs/</pre>
+
+<h3>Run with ReproTM</h3>
+<div class="tip">
+  💡 First time using <code>METHOD=reprotm</code>? Run <code>bash code/setup_reprotm.sh</code> once first — see Section 2c. <code>run_PCM.sh</code> will remind you if you forget.
+</div>
+<pre># Same required inputs — you cannot run --method reprotm by itself.
+# --template defaults to the bundled ABCC seedmap; --template scan reuses the
+# matlab_tm SCAN template (see Section 4j):
+sbatch run_PCM.sh --method reprotm --template scan \
+    --dtseries /path/to/data/sub-001_ses-01_task-rest_bold.dtseries.nii \
+    --motion /path/to/data/motion.mat \
+    --surf-l /path/to/data/hemi-L_midthickness.surf.gii \
+    --surf-r /path/to/data/hemi-R_midthickness.surf.gii \
+    --basedir /path/to/outputs/</pre>
+<div class="warn">
+  ⚠️ <code>METHOD=reprotm</code> requires ReproTM (Godfrey et al.), which PCM does <strong>not</strong> bundle — run <code>bash code/setup_reprotm.sh</code> once (Section 2c), or set <code>REPROTM_DIR</code> in cluster.conf (Section 2d) to your own local install instead. <code>run_PCM.sh</code> checks this exists before submitting any jobs and errors immediately if it's missing or misconfigured.
+</div>
+<div class="tip">
+  💡 <code>METHOD=reprotm</code> also needs a Python with <code>nibabel</code>/<code>scipy</code>/<code>numpy</code> — set <code>REPROTM_PYTHON</code> in cluster.conf (Section 2d). A preflight check fails the job in seconds if it's misconfigured, before the ~40-min dconn build.
+</div>
+
+<h3>Add options on top of the required inputs</h3>
+<p>The examples below show only the option being added — the five required inputs still apply.</p>
+<pre># Time truncation (see 4k):
+sbatch run_PCM.sh ... --startmins 10                 # first 10 minutes
+sbatch run_PCM.sh ... --startmins 10 --keepfrom end  # last 10 minutes
+sbatch run_PCM.sh ... --startmins 5 --increment 5 --endmins 20  # 5,10,15,20
+
+# Binary motion mask instead of FD (.txt of 0/1 per TR):
+sbatch run_PCM.sh ... --motion /path/to/sub-001_custom_mask.txt
+
+# Shuffle method (see 4h):
+sbatch run_PCM.sh ... --shuffle bagging --shuffle-chunk-size 5</pre>
+
+<h3>Get help &amp; monitor</h3>
+<pre>bash run_PCM.sh --help          # full flag list
+
+squeue -u $USER                 # running jobs
+# Logs live inside each task folder:
+cat BASEDIR/sub-SUB/ses-SES/TASK_FOLDER/logs/orchestrator_*.out
+cat BASEDIR/sub-SUB/ses-SES/TASK_FOLDER/logs/perm_*.out</pre>
+
+<h3>Combined figures across methods / runs</h3>
+<pre># Default: combine ALL task-TASK_* folders for this subject:
+bash run_PCM.sh --combined-figs \
+    --basedir /path/to/outputs/ \
+    --dtseries /path/to/data/sub-001_ses-01_task-rest_bold.dtseries.nii
+
+# Include only specific folders (e.g. exclude test runs) and name the output:
+bash run_PCM.sh --combined-figs \
+    --basedir /path/to/outputs/ \
+    --dtseries /path/to/data/sub-001_ses-01_task-rest_bold.dtseries.nii \
+    --includefolder task-rest_method-matlabTM_tmpl-scan_sh-bootstrap \
+    --includefolder task-rest_method-reproTM_tmpl-scan_sh-bootstrap \
+    --combined-name matlabtm-reprotm     # → task-rest_combined_matlabtm-reprotm/</pre>
+
+<!-- ===== SECTION 4 ===== -->
+<h2 id="parameters">4. Parameter Reference</h2>
+<p>This section documents every input and setting in <code>run_PCM.sh</code> that controls how your PCM run behaves — the required inputs, the method, and all the optional knobs.</p>
+<div class="tip">
+  💡 <strong>How to set anything below:</strong> every parameter can be set two ways —
+  <span class="how-edit">as a variable in the USER SETTINGS block of run_PCM.sh</span> (your standing default), or
+  <span class="how-flag">as a <code>--flag</code> on the command line</span> (overrides the file, ideal for one-off changes).
+  Tables show both the variable name and the flag where they differ.
+</div>
+
+<h3 id="param-core">4a. Required inputs</h3>
+<p>These five must be provided every run — in USER SETTINGS or as flags.</p>
+<table>
+  <tr><th>Variable / Flag</th><th>Example</th><th>Description</th></tr>
+  <tr><td><code>dtseries</code> / <code>--dtseries</code></td><td><code>sub-001_ses-01_task-rest_bold.dtseries.nii</code></td><td>Full path to the input dtseries. BIDS naming lets PCM auto-parse sub/ses/task.</td></tr>
+  <tr><td><code>motion_file</code> / <code>--motion</code></td><td><code>/path/to/motion.mat</code></td><td>Motion file — <code>.mat</code> (DCAN), <code>.hdf5</code> (XCP-D, auto-converted), or <code>.txt</code> (0/1 frame mask). Not used to derive sub/ses/task.</td></tr>
+  <tr><td><code>surf_L</code> / <code>--surf-l</code></td><td><code>/path/to/hemi-L_midthickness.surf.gii</code></td><td>Left midthickness cortical surface.</td></tr>
+  <tr><td><code>surf_R</code> / <code>--surf-r</code></td><td><code>/path/to/hemi-R_midthickness.surf.gii</code></td><td>Right midthickness cortical surface.</td></tr>
+  <tr><td><code>BASEDIR</code> / <code>--basedir</code></td><td><code>/path/to/outputs/</code></td><td>Output <strong>root only</strong>. PCM appends <code>sub-/ses-/task-</code> itself — do not include them here.</td></tr>
+</table>
+
+<h3 id="param-optional">4b. Optional subject/session/task labels</h3>
+<p>Only needed when the dtseries filename is not BIDS-formatted (otherwise auto-parsed). These never go into <code>BASEDIR</code> — PCM places them in the output path for you.</p>
+<table>
+  <tr><th>Variable / Flag</th><th>Description</th></tr>
+  <tr><td><code>SUB</code> / <code>--sub</code></td><td>Subject ID. Auto-parsed from <code>sub-XXX</code> in the dtseries filename.</td></tr>
+  <tr><td><code>SES</code> / <code>--ses</code></td><td>Session ID. Auto-parsed from <code>ses-XXX</code>.</td></tr>
+  <tr><td><code>TASK</code> / <code>--task</code></td><td>Task name. Auto-parsed from <code>task-XXX</code>.</td></tr>
+</table>
+
+<h3 id="param-method">4c. Community detection method</h3>
+<p>Set <code>METHOD</code> in run_PCM.sh, or pass <code>--method</code>.</p>
+<table>
+  <tr><th>Value</th><th>Algorithm</th><th>Notes</th></tr>
+  <tr>
+    <td><code>matlab_tm</code> <span class="badge-rec">default</span></td>
+    <td>MATLAB template matching</td>
+    <td>Original PCM method. Assigns vertices by correlation with network seed maps. Template controlled by <code>TEMPLATE</code>. Requires a one-time <code>bash code/setup_matlab_tm.sh</code> before first use (Section 2b) — its core code is fetched, not bundled.</td>
+  </tr>
+  <tr>
+    <td><code>reprotm</code></td>
+    <td>Python template matching (ReproTM)</td>
+    <td>Z-scored dconn per permutation, then winner-take-all matching in Python + min-size cleanup. Run <code>bash code/setup_reprotm.sh</code> before first use (Section 2c) — its core code is fetched, not bundled. Also needs <code>REPROTM_PYTHON</code> (Section 2d).</td>
+  </tr>
+</table>
+
+<h3 id="param-reprotm">4d. ReproTM settings <span class="badge-rt">ReproTM only</span></h3>
+<div class="warn">
+  ⚠️ <strong>Not bundled — fetched instead.</strong> Run <code>bash code/setup_reprotm.sh</code> once (Section 2c) — <code>--pinned</code> (default, known-good) or <code>--latest</code> (current upstream). Prefer your own install? Set <code>REPROTM_DIR</code> in cluster.conf to override (<a href="https://github.com/KateJGodfrey/ReproTM">github.com/KateJGodfrey/ReproTM</a>). See <code>deps/reprotm/README.md</code> for the expected layout and <code>deps/reprotm/COMPATIBILITY_NOTES.md</code> for known version-compatibility issues and what each patch fixes.
+</div>
+<div class="tip">
+  💡 <strong>How ReproTM per-permutation works:</strong> smooth → dconn via <code>cifti_conn_matrix_for_wrapper_continous</code> (the same tool matlab_tm uses) → Zscore_dconn (sectional) → ReproTM_v1.0.0.py (winner-take-all on the z-scored dconn, optional SCAN/SMd/SMl refinement) → minsize_v1.0.0.py (reassigns small clusters to the mode of their neighbors). Published as <code>*_recolored.dscalar.nii</code>, matching matlab_tm. The two Python scripts come from <code>REPROTM_DIR</code>, which resolves to the fetched copy automatically unless you've overridden it.
+</div>
+<table>
+  <tr><th>Parameter</th><th>Default</th><th>Description</th></tr>
+  <tr><td><code>TEMPLATE</code> / <code>--template</code></td><td><code>""</code> (bundled ABCC)</td><td>Seedmap <code>.mat</code> with a <code>seed_matrix</code> variable — <code>scan</code> | <code>abcd_full</code> | <code>abcd_surf</code> | <code>/path.mat</code> — see Section 4j.</td></tr>
+  <tr><td><code>REPROTM_NETWORKS</code> / <code>--reprotm-networks</code></td><td>per-template</td><td>Space-separated network names matching the template's <code>seed_matrix</code> columns. Auto-set for built-in keywords; <strong>required</strong> for a custom <code>.mat</code> whose columns differ.</td></tr>
+  <tr><td><code>REPROTM_MINSIZE</code> / <code>--reprotm-minsize</code></td><td><code>30</code></td><td>Minimum cluster size (greyordinates) for the min-size cleanup.</td></tr>
+  <tr><td><code>REPROTM_TEMPLATE_MINTHRESH</code> / <code>--reprotm-minthresh</code></td><td><code>1</code></td><td>Template seedmap thresholding minimum.</td></tr>
+  <tr><td><code>REPROTM_REFINESCAN</code> / <code>--reprotm-refinescan</code></td><td><code>1</code></td><td>Re-match SMd/SMl/SCAN at a higher threshold (needs those networks in the template).</td></tr>
+  <tr><td><code>REPROTM_REFINESCAN_MINTHRESH</code> / <code>--reprotm-refinescan-minthresh</code></td><td><code>3</code></td><td>Threshold applied during the SCAN/SMd/SMl refinement.</td></tr>
+  <tr><td><code>REPROTM_PYTHON</code></td><td><code>python3</code></td><td>Python with nibabel/scipy/numpy. Set in cluster.conf (Section 2d).</td></tr>
+</table>
+
+<h3 id="param-dconn">4e. Shared dconn settings</h3>
+<p>Both methods build their dense connectivity matrix (dconn) via the same underlying tool (<code>cifti_conn_matrix_for_wrapper_continous</code>), so these settings apply regardless of <code>METHOD</code>:</p>
+<table>
+  <tr><th>Parameter</th><th>Default</th><th>Description</th></tr>
+  <tr><td><code>SMOOTHING_KERNEL</code> / <code>--smoothing-kernel</code></td><td><code>2.25</code></td><td>Smoothing kernel (mm) applied to the dtseries before dconn computation. Set to <code>0</code> to skip.</td></tr>
+  <tr><td><code>FISHER_Z</code> / <code>--fisher-z</code></td><td><code>1</code></td><td>Fisher-z transform the correlations before the sectional z-scoring step. Set to <code>0</code> for plain Pearson r.</td></tr>
+  <tr><td><code>REMOVE_OUTLIERS</code> / <code>--remove-outliers</code></td><td><code>1</code></td><td>Standard-deviation-based outlier frame removal on top of FD-based motion censoring.</td></tr>
+</table>
+
+<h3 id="param-motion">4f. Motion options</h3>
+<p>Set <code>motion_file</code> / <code>--motion</code> to your motion file. Three formats:</p>
+<table>
+  <tr><th>Extension</th><th>Format</th><th>Behavior</th></tr>
+  <tr><td><code>.mat</code></td><td>DCAN FD format</td><td>Used directly. FD threshold set by <code>FD</code> / <code>--fd</code> (default 0.2 mm).</td></tr>
+  <tr><td><code>.hdf5</code></td><td>XCP-D format</td><td>Auto-converted to <code>.mat</code> once in <code>run_PCM.sh</code> before submission.</td></tr>
+  <tr><td><code>.txt</code></td><td>Binary frame mask</td><td>One integer per line: <code>1</code> = keep, <code>0</code> = remove. Bypasses FD filtering. Line count must match TR count.</td></tr>
+</table>
+<div class="warn">⚠️ A <code>.txt</code> motion mask and time truncation (<code>--startmins</code>) cannot be used together. Pre-truncate your data manually if you need both.</div>
+
+<h3 id="param-interp">4g. Spatial noise interpolation</h3>
+<p>Runs MATLAB spatial noise interpolation on the dtseries before anything else (smoothing/dconn/shuffling all happen after). Applies to every method.</p>
+<table>
+  <tr><th>Variable / Flag</th><th>Default</th><th>Description</th></tr>
+  <tr><td><code>intrp_noise</code> / <code>--interp-noise</code></td><td><code>0</code> (off)</td><td>Set to <code>1</code> to run interpolation. Unchanged default behavior if you don't pass this flag.</td></tr>
+</table>
+<p>If a sibling <code>&lt;dtseries-basename&gt;_spatially_interpolated.dtseries.nii</code> already exists next to your <code>--dtseries</code> file, PCM reuses it instead of recomputing (only checked when <code>--interp-noise 1</code> is set). If you leave <code>--interp-noise</code> unset and your dtseries filename doesn't end in that suffix, PCM prints an <code>[INFO]</code> hint suggesting <code>--interp-noise 1</code> — it does <strong>not</strong> turn interpolation on automatically; that would silently change what runs for anyone not passing the flag.</p>
+
+<h3 id="param-shuffle">4h. Shuffle options</h3>
+<p>The <code>shuffle_option</code> / <code>--shuffle</code> parameter controls how each permutation's time series is built from the retained (post-censoring) frames. <code>--shuffle-chunk-size</code> supplies the size/length these options need; its meaning depends on the option. The eight options fall into three families:</p>
+
+<h4>Resample with replacement</h4>
+<table>
+  <tr><th>Option</th><th>What it does</th><th>chunk_size role</th></tr>
+  <tr><td><code>bootstrap</code> <span class="badge-rec">default</span></td><td>Resample individual TRs <strong>with replacement</strong>; output is the <strong>full</strong> scan length.</td><td>Ignored</td></tr>
+  <tr><td><code>bagging</code></td><td>Resample individual TRs with replacement; output <strong>fixed at N minutes</strong> (can up- or down-sample relative to the scan).</td><td>Target length in <strong>minutes</strong></td></tr>
+  <tr><td><code>bootstrap_variable</code></td><td>Resample individual TRs with replacement, then keep a <strong>random amount</strong> per perm — from N minutes up to the full scan.</td><td><strong>Minimum</strong> minutes</td></tr>
+</table>
+
+<h4>Reorder without replacement (keeps all good frames, full length)</h4>
+<table>
+  <tr><th>Option</th><th>What it does</th><th>chunk_size role</th></tr>
+  <tr><td><code>TRs</code></td><td>Randomly reorder individual TRs.</td><td>Ignored</td></tr>
+  <tr><td><code>run</code></td><td>Randomly reorder whole-run blocks (multi-run acquisitions).</td><td>Ignored</td></tr>
+  <tr><td><code>minutes</code></td><td>Split data into N-minute blocks, then randomly reorder the blocks.</td><td>Block size in <strong>minutes</strong></td></tr>
+  <tr><td><code>percent</code></td><td>Split data into blocks each N% of the scan, then randomly reorder the blocks.</td><td>Block size as <strong>% of total</strong></td></tr>
+</table>
+
+<h4>Real-data window (no resampling)</h4>
+<table>
+  <tr><th>Option</th><th>What it does</th><th>chunk_size role</th></tr>
+  <tr><td><code>subsample</code></td><td>Take <strong>one contiguous segment</strong> of the real (un-resampled) data, of random length, starting at a random position. Tests stationarity &amp; data sufficiency.</td><td><strong>Minimum</strong> minutes</td></tr>
+</table>
+
+<h3 id="param-modes">4i. Analysis mode flags</h3>
+<table>
+  <tr><th>Flag</th><th>Status</th><th>What it does</th></tr>
+  <tr><td><code>SPLITPCT=1</code> / <code>--splitpct</code></td><td>✅ Main mode</td><td>Runs the full PCM analysis: shuffles data, runs the chosen method using <code>percent_holdout</code>% of the shuffled data per permutation, and aggregates across all N permutations into confidence/probability maps.</td></tr>
+  <tr><td><code>percent_holdout</code> / <code>--percent-holdout</code></td><td>default: <code>100</code></td><td>Percent of the shuffled data actually used per permutation.</td></tr>
+  <tr><td><code>STANDARDTM=1</code> / <code>--standardtm</code></td><td>Optional baseline</td><td>Runs a single template matching on the real (unshuffled) data — a ground-truth reference. <code>matlab_tm</code> only. Default off.</td></tr>
+  <tr><td><code>SPLITHALF=1</code></td><td>⚠️ Deprecated</td><td>Original split-half reliability mode. Use SPLITPCT for new analyses. No CLI flag.</td></tr>
+  <tr><td><code>SCRATCH_DIR</code> / <code>--scratch-dir</code></td><td>debug only</td><td>Keep intermediate files (shuffled dtseries, dconn, masks) in a persistent path instead of node-local <code>/tmp</code>. Only use with a small <code>--num</code> (1-2) — each permutation's dconn is tens of GB.</td></tr>
+</table>
+
+<h3 id="param-template">4j. Network templates</h3>
+<p>The <code>TEMPLATE</code> setting (or <code>--template</code> flag) selects the network template each method matches against. <strong>By default every method uses its own bundled template</strong> — you only set this if you want a different one. The required <strong>file type depends on the method</strong>:</p>
+<table>
+  <tr><th>Method</th><th>Template file type</th><th>Bundled default (used when <code>TEMPLATE=""</code>)</th></tr>
+  <tr>
+    <td><code>matlab_tm</code></td>
+    <td><code>.mat</code> (seed maps)</td>
+    <td><code>templates/template_matching/</code><br><code>seedmaps_subs_withsmoothed_dtseries_n141_all_networksZscored.mat</code> (the <code>scan</code> template)</td>
+  </tr>
+  <tr>
+    <td><code>reprotm</code></td>
+    <td><code>.mat</code> (with a <code>seed_matrix</code> variable)</td>
+    <td><code>templates/reprotm/</code><br><code>tpl-ABCC2026-a3-9to16_space-fsLR_den-91k_desc-seedmap_stat-zscored.mat</code></td>
+  </tr>
+</table>
+
+<h4>Built-in keywords</h4>
+<table>
+  <tr><th>--template value</th><th>Methods</th><th>Template</th><th>Coverage</th></tr>
+  <tr><td><code>""</code> (default)</td><td>both</td><td>matlab_tm → <code>scan</code>; reprotm → bundled ABCC seedmap</td><td>Cortex + subcortex</td></tr>
+  <tr><td><code>scan</code></td><td>matlab_tm, reprotm</td><td>ABCD-SCAN (n=141)</td><td>Cortex + subcortex (91k)</td></tr>
+  <tr><td><code>abcd_full</code></td><td>matlab_tm, reprotm</td><td>ABCD (n=164)</td><td>Cortex + subcortex (91k)</td></tr>
+  <tr><td><code>abcd_surf</code></td><td>matlab_tm, reprotm</td><td>ABCD (n=161)</td><td>Cortex surface only (59k)</td></tr>
+</table>
+
+<h4>Using your own template</h4>
+<pre># matlab_tm or reprotm — point --template at a .mat seedmap:
+sbatch run_PCM.sh ... --method reprotm --template /path/to/my_seedmap.mat
+# (for reprotm, also set REPROTM_NETWORKS to match its seed_matrix columns)</pre>
+<div class="tip">💡 When you use a custom template, add <code>--template-label NAME</code> so the task-folder name is readable (otherwise the auto-label is the raw filename).</div>
+
+<h3 id="param-time">4k. Time truncation</h3>
+<p>Test how results depend on data quantity by truncating the scan before running. Leave <code>STARTMINS</code> empty (default) to use the full dataset.</p>
+<table>
+  <tr><th>Variable / Flag</th><th>Description</th></tr>
+  <tr><td><code>STARTMINS</code> / <code>--startmins</code></td><td>Truncate to this many minutes.</td></tr>
+  <tr><td><code>KEEP_FROM</code> / <code>--keepfrom</code></td><td><code>start</code> (default) or <code>end</code> — which end of the scan to take from.</td></tr>
+  <tr><td><code>ENDMINS</code> / <code>--endmins</code></td><td>Upper bound for a loop over multiple lengths (requires <code>INCREMENT</code>).</td></tr>
+  <tr><td><code>INCREMENT</code> / <code>--increment</code></td><td>Step size in minutes when iterating from <code>STARTMINS</code> to <code>ENDMINS</code>.</td></tr>
+</table>
+
+<h3 id="param-slurm">4l. SLURM resources</h3>
+<p><strong>Site-level defaults now live in <code>cluster.conf</code></strong> (one editable place per cluster) rather than being hardcoded in <code>run_PCM.sh</code> — the goal being that most users only ever need to copy <code>cluster.conf</code>, not <code>run_PCM.sh</code> itself. Per-run overrides (the <code>ntasks</code>/<code>mem</code>/<code>tmpspace</code>/<code>time</code> variables in <code>run_PCM.sh</code> USER SETTINGS, left empty = cluster.conf default) still take precedence for a specific job if you need to size up or down for one analysis.</p>
+<table>
+  <tr><th>Resource</th><th>matlab_tm</th><th>reprotm</th></tr>
+  <tr><td><code>ntasks</code> (cluster.conf: <code>*_NTASKS</code>)</td><td>1</td><td>1</td></tr>
+  <tr><td><code>mem</code> (cluster.conf: <code>*_MEM</code>)</td><td>128gb</td><td>200gb</td></tr>
+  <tr><td><code>tmpspace</code> (cluster.conf: <code>*_TMPSPACE</code>)</td><td>100gb</td><td>100gb</td></tr>
+  <tr><td><code>time</code> (cluster.conf: <code>*_TIME</code>)</td><td>10:00:00</td><td>12:00:00</td></tr>
+</table>
+<p>Auxiliary jobs (not method-dependent) also read fixed sizes from <code>cluster.conf</code>:</p>
+<table>
+  <tr><th>Job</th><th>cluster.conf variables</th><th>Default</th></tr>
+  <tr><td>Orchestrator (long-lived polling/submission job)</td><td><code>ORCHESTRATOR_MEM</code> / <code>ORCHESTRATOR_TIME</code></td><td>20gb / 48:00:00</td></tr>
+  <tr><td>Figure aggregation (main run, <code>--combined-figs</code> both share this)</td><td><code>MAKEFIGS_MEM</code> / <code>MAKEFIGS_TIME</code></td><td>64gb / 1:00:00</td></tr>
+</table>
+<div class="warn">⚠️ One thing <code>cluster.conf</code> can't cover: <code>run_PCM.sh</code>'s own top-of-file <code>#SBATCH</code> partition/account (the very first job SLURM submits). SLURM reads <code>#SBATCH</code> pragmas at submit time, before the script body runs and could source <code>cluster.conf</code> — so that one line still needs a one-time edit, or pass <code>sbatch --partition=... --account=... run_PCM.sh</code> at the command line.</div>
+<div class="warn">⚠️ The orchestrator job itself runs up to 48 hours while it monitors permutation jobs. If it dies, permutation jobs may still finish, but figures won't be generated automatically — just re-run the same command and PCM resumes from the completed perms.</div>
+
+<h3 id="param-combined">4m. Combined figures</h3>
+<p>A lightweight mode that operates on <em>existing</em> permutation outputs without repeating the full pipeline.</p>
+
+<h4>--combined-figs (or COMBINED_FIGS=1)</h4>
+<p>Concatenates <code>successful_perms.conc</code> across task folders and submits one <code>make_figs</code> job to build confidence maps from the combined pool. Only <code>--basedir</code> is required (plus <code>--sub/--ses/--task</code> if not parseable from <code>--dtseries</code>). Re-runnable any time to incorporate new methods.</p>
+<table>
+  <tr><th>Flag</th><th>Description</th></tr>
+  <tr><td>(default)</td><td>Combine <strong>all</strong> <code>task-TASK_*</code> folders for the subject.</td></tr>
+  <tr><td><code>--includefolder PATH</code> (repeatable)</td><td>Combine <strong>only</strong> these folders instead of auto-scanning. PATH may be an absolute path or just the task-folder name (resolved under sub-/ses-). Lets you exclude test runs without deleting them.</td></tr>
+  <tr><td><code>--combined-name NAME</code></td><td>Suffix the output folder → <code>task-TASK_combined_NAME</code> (default: <code>task-TASK_combined</code>).</td></tr>
+</table>
+
+<!-- ===== SECTION 5 ===== -->
+<h2 id="pipeline-flow">5. What happens when you run</h2>
+
+<div class="step-box step1">
+  <strong>Step 1 — run_PCM.sh</strong> (submitted by you)<br>
+  Validates inputs and method, converts .hdf5 motion files if needed, calculates TR and scan duration. Then submits the orchestrator as a SLURM job.
+</div>
+<div class="flow">↓</div>
+
+<div class="step-box step2">
+  <strong>Step 2 — orchestrate_PCM.sh</strong> (long-running SLURM job, up to 48h)<br>
+  Checks which permutations are already done. Submits one SLURM job per missing permutation. Polls SLURM every 60 seconds until all finish, then submits the figure job.
+</div>
+<div class="flow">↓ × N (one per permutation, run in parallel)</div>
+
+<strong>Step 3 — run_permutation.sh</strong> (one per permutation)
+
+<div class="flow-branch">
+  <div class="branch">
+    <div class="branch-label" style="color:#e94560">METHOD=matlab_tm</div>
+    Sets up /tmp workspace. Runs MATLAB shuffle on the time series. Runs template matching (which builds its own dconn internally via cifti_connectivity, then z-scores it). Copies <code>*_recolored.dscalar.nii</code> to BASEDIR and appends its path to the <code>.conc</code>.
+  </div>
+  <div class="branch reprotm">
+    <div class="branch-label" style="color:#5a4fcf">METHOD=reprotm</div>
+    Preflight-checks the Python. /tmp workspace → MATLAB shuffle → dconn prologue (smooth → cifti_connectivity → Zscore_dconn). Then pure Python:
+    <ol style="margin:6px 0">
+      <li>ReproTM_v1.0.0.py → network assignment</li>
+      <li>minsize_v1.0.0.py → cluster cleanup</li>
+    </ol>
+    Copies output as <code>*_recolored.dscalar.nii</code> to BASEDIR and appends to the same <code>.conc</code>.
+  </div>
+</div>
+
+<div class="flow">↓ (after all permutations finish)</div>
+
+<div class="step-box step4">
+  <strong>Step 4 — make_figs.sh → TM_dscalar_compare_across_permutations.m</strong><br>
+  Reads all permutation outputs from the <code>.conc</code> file (works for both methods). Computes probability maps and the mode map, and generates surface/subcortical visualization images.
+</div>
+
+<div class="tip">
+  💡 <strong>Fault tolerance:</strong> the orchestrator re-checks for completed permutations before submitting — so re-running <code>run_PCM.sh</code> for the same subject only submits the perms that didn't finish last time.
+</div>
+
+<!-- ===== SECTION 6 ===== -->
+<h2 id="outputs">6. Outputs</h2>
+
+<h3 id="output-key">6a. Key output files</h3>
+<table>
+  <tr><th>File</th><th>What it is</th><th>How to use</th></tr>
+  <tr>
+    <td><code>figures/ciftis/<br>Probability_Maps_across_perms_TM_Percent_holdout_*_network_probability.dscalar.nii</code></td>
+    <td><strong>Main PCM output.</strong> Multi-map dscalar — each map is one network; each vertex value is the fraction of permutations (0–1) it was assigned to that network.</td>
+    <td>Load in Workbench. High = confident; ~0.5 = ambiguous.</td>
+  </tr>
+  <tr>
+    <td><code>figures/ciftis/<br>Mode_of_Shuffled_dscalars_Percent_holdout_population_mode.dscalar.nii</code></td>
+    <td><strong>Mode map.</strong> Each vertex = most commonly assigned network across all permutations.</td>
+    <td>The "best guess" assignment, accounting for uncertainty.</td>
+  </tr>
+  <tr>
+    <td><code>figures/ciftis/<br>All_surface_networks_confidence_maps_images_with_labels.png</code></td>
+    <td>Summary image grid of all network confidence maps on the surface.</td>
+    <td>Quick visual overview of well-defined vs. ambiguous networks.</td>
+  </tr>
+  <tr>
+    <td><code>perms/perm-0001/<br>sub-…_perm-0001_recolored.dscalar.nii</code> <em>(either method)</em></td>
+    <td>Per-permutation network assignment. 4-digit zero-padded index.</td>
+    <td>Individual permutation outputs used to build the probability maps.</td>
+  </tr>
+  <tr>
+    <td><code>run_params.json</code></td>
+    <td>Run parameters at job start: method, template, num_perms, FD, shuffle, truncation, datestamp, dtseries path.</td>
+    <td>Reference for exactly how a task folder was generated.</td>
+  </tr>
+  <tr>
+    <td><code>successful_perms.conc</code></td>
+    <td>Paths to all successfully completed perm recolored dscalars (one per task folder).</td>
+    <td>Input to the figure job. Inspect to count finished perms.</td>
+  </tr>
+</table>
+
+<h3 id="output-tree">6b. Full output tree</h3>
+<div class="output-box">
+<span class="dir">BASEDIR/sub-SUB/ses-SES/</span><br>
+│<br>
+├── <span class="dir">task-TASK_method-matlabTM_tmpl-scan_sh-bootstrap/</span><br>
+│&nbsp;&nbsp;&nbsp;<span class="note">— matlab_tm task folder</span><br>
+│&nbsp;&nbsp;&nbsp;├── <span class="file">run_params.json</span><br>
+│&nbsp;&nbsp;&nbsp;├── <span class="file">successful_perms.conc</span><br>
+│&nbsp;&nbsp;&nbsp;├── <span class="dir">perms/</span> <span class="note">(perm-0001 … perm-NNNN)</span><br>
+│&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── <span class="dir">perm-0001/</span><br>
+│&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <span class="file">sub-…_perm-0001_recolored.dscalar.nii</span><br>
+│&nbsp;&nbsp;&nbsp;├── <span class="dir">standard/</span> <span class="note">— matlab_tm only, if STANDARDTM=1</span><br>
+│&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── <span class="file">sub-…_standard_recolored.dscalar.nii</span><br>
+│&nbsp;&nbsp;&nbsp;├── <span class="dir">figures/ciftis/</span><br>
+│&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── <span class="file">Probability_Maps_…_network_probability.dscalar.nii</span><br>
+│&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;<span class="note">— MAIN OUTPUT</span><br>
+│&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── <span class="file">Mode_…_population_mode.dscalar.nii</span><br>
+│&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── <span class="file">All_surface_networks_…_with_labels.png</span><br>
+│&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── <span class="file">thresholded_confidence_maps/</span><br>
+│&nbsp;&nbsp;&nbsp;└── <span class="file">logs/</span><br>
+│<br>
+├── <span class="rt">task-TASK_method-reproTM_tmpl-abcc18_sh-bootstrap/</span><br>
+│&nbsp;&nbsp;&nbsp;<span class="note">— reprotm task folder (same layout, no standard/)</span><br>
+│<br>
+└── <span class="dir">task-TASK_combined/</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="note">— combined figures across methods</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="file">all_perms.conc</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="dir">figures/ciftis/</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;└── <span class="dir">logs/</span><br>
+</div>
+
+<!-- ===== SECTION 7 ===== -->
+<h2 id="requirements">7. Requirements</h2>
+<p>Almost everything PCM needs is bundled in the package. The only things you supply are a few cluster modules, your data, and (per method) one or two external pieces noted below.</p>
+<table>
+  <tr><th>Dependency</th><th>How loaded</th><th>Notes</th></tr>
+  <tr><td><strong>SLURM</strong></td><td>System scheduler</td><td>Required. PCM submits one SLURM job per permutation.</td></tr>
+  <tr><td><strong>MATLAB</strong></td><td><code>module load matlab</code></td><td>R2019a or later. Set <code>MATLAB_MODULE</code> in cluster.conf.</td></tr>
+  <tr><td><strong>Workbench</strong> (<code>wb_command</code>)</td><td><code>module load workbench</code></td><td>CIFTI operations and smoothing. Set <code>WORKBENCH_MODULE</code>.</td></tr>
+  <tr><td><strong>Python 3</strong></td><td>System / module / conda</td><td>Permutation status checks; ReproTM (see below).</td></tr>
+  <tr><td><strong>fMRI data</strong></td><td>—</td><td>From XCP-D, ABCD DCAN, or BICEPS. Need dtseries + motion + L/R surface .gii.</td></tr>
+</table>
+
+<p><strong>Bundled — nothing to download or verify:</strong> cifti-matlab, cifti_connectivity, figure utilities, and all network templates (including ReproTM's default template) ship inside <code>deps/</code> and <code>templates/</code>.</p>
+
+<p><strong>Not bundled — you fetch these:</strong> both methods' core code is not vendored in this repo, but both are a single script away. <code>METHOD=matlab_tm</code> (the default) needs a one-time <code>bash code/setup_matlab_tm.sh</code> (Section 2b) — fetched from its public GitHub home at a pinned commit, patched automatically, no account needed. <code>METHOD=reprotm</code> needs <code>bash code/setup_reprotm.sh</code> (Section 2c) — same idea, but with a choice of <code>--pinned</code> (default, known-good) or <code>--latest</code> (current upstream, patches applied only if still needed) since ReproTM isn't license-restricted the way matlab_tm is. Neither is an oversight — see <code>patches/template_matching_RH.patch</code> and <code>deps/reprotm/README.md</code> for why each is fetched rather than vendored. Prefer to manage ReproTM yourself instead of using the fetch script? Set <code>REPROTM_DIR</code> in cluster.conf to override the fetched default (see <code>deps/reprotm/README.md</code>) — matlab_tm doesn't currently support this, since its whole point is fetching one specific, verified source.</p>
+
+<p><strong>The method-specific externals you configure (in cluster.conf):</strong></p>
+<table>
+  <tr><th>For</th><th>What you provide</th></tr>
+  <tr><td><code>METHOD=matlab_tm</code></td><td>Nothing to configure — just run <code>bash code/setup_matlab_tm.sh</code> once (Section 2b) before your first run. <code>run_PCM.sh</code> checks it's been done before submitting jobs.</td></tr>
+  <tr><td><code>METHOD=reprotm</code></td><td>Run <code>bash code/setup_reprotm.sh</code> once (Section 2c) — nothing to configure unless you want your own install instead (<code>REPROTM_DIR</code>). PCM checks it exists before submitting jobs. Also <code>REPROTM_PYTHON</code> — a python with <code>nibabel</code>/<code>scipy</code>/<code>numpy</code> (the default <code>python3</code> usually lacks nibabel). A conda env's python by absolute path works well.</td></tr>
+</table>
+
+<!-- ===== SECTION 8 ===== -->
+<h2 id="troubleshooting">8. Troubleshooting</h2>
+<table>
+  <tr><th>Problem</th><th>What to check</th></tr>
+  <tr><td><strong>"Required inputs are missing"</strong></td><td>Ensure <code>dtseries</code>, <code>motion_file</code>, <code>surf_L</code>, <code>surf_R</code>, <code>BASEDIR</code> are all set (file or flags). <code>bash run_PCM.sh --help</code> lists everything.</td></tr>
+  <tr><td><strong>"Could not parse SUB/SES/TASK"</strong></td><td>Filename isn't BIDS. Set <code>--sub/--ses/--task</code> (or the variables).</td></tr>
+  <tr><td><strong>"motion file not found" / bad extension</strong></td><td>Must be <code>.mat</code>, <code>.hdf5</code>, or <code>.txt</code>.</td></tr>
+  <tr><td><strong>Permutation jobs fail immediately</strong></td><td>Check <code>TASK_DIR/logs/perm_*.out</code>. Common: surface .gii not found, too little scratch (<code>tmpspace</code>), wrong MATLAB module in cluster.conf.</td></tr>
+  <tr><td><strong>Figures not generated</strong></td><td>The figure job runs after all perms complete. If the orchestrator timed out (48h), just re-run <code>run_PCM.sh</code> — it skips completed perms and proceeds to figures.</td></tr>
+  <tr><td><strong>"Index … exceeds array bounds" in the MATLAB shuffle</strong></td><td>Was a stale shuffle-order cache from a different truncation length; caches are now keyed by frame count. Re-run with the current code; delete any old <code>BASEDIR/*_order_*.mat</code> if needed.</td></tr>
+  <tr><td><strong>[matlab_tm] "METHOD=matlab_tm requires template_matching_RH.m … which PCM does not bundle"</strong></td><td>Run <code>bash code/setup_matlab_tm.sh</code> once (Section 2b) — do this on a login node/workstation with internet access, not inside a SLURM job.</td></tr>
+  <tr><td><strong>[reprotm] "METHOD=reprotm requires ReproTM … which PCM does not bundle"</strong></td><td>Run <code>bash code/setup_reprotm.sh</code> once (Section 2c) — same login-node/workstation caveat as matlab_tm above.</td></tr>
+  <tr><td><strong>[reprotm] setup_reprotm.sh: "already exists (mode: …), but you asked for --…"</strong></td><td>You're switching between <code>--pinned</code> and <code>--latest</code> on an existing fetch. Add <code>--force</code> to wipe and re-fetch in the new mode.</td></tr>
+  <tr><td><strong>[reprotm] "ModuleNotFoundError: nibabel"</strong></td><td>Point <code>REPROTM_PYTHON</code> at a python that has nibabel/scipy/numpy (conda env, absolute path). The preflight reports which import failed within seconds.</td></tr>
+  <tr><td><strong>[reprotm] networks mislabeled</strong></td><td>For a custom <code>.mat</code>, set <code>REPROTM_NETWORKS</code> to match the template's <code>seed_matrix</code> column order.</td></tr>
+  <tr><td><strong>Wrong SLURM partition/account</strong></td><td>Edit <code>cluster.conf</code> in your study directory. <code>sinfo -s</code> for partitions, <code>sacctmgr show user</code> for account.</td></tr>
+  <tr><td><strong>Poor confidence maps (everything low)</strong></td><td>Check frames retained after motion censoring — too-strict FD or a short scan leaves too little data. Try a higher FD or verify the correct template.</td></tr>
+</table>
+
+<!-- ===== SECTION 9 ===== -->
+<h2 id="directory">9. Directory Layout</h2>
+<div class="output-box">
+<span class="dir">PrecisionConfidenceMapping/</span><br>
+├── <span class="file">cluster.conf</span> <span class="note">— cluster settings: partition, account, modules — edit this</span><br>
+├── <span class="file">config.sh</span> <span class="note">— auto-computed internal paths (no editing)</span><br>
+├── <span class="file">run_PCM.sh</span> <span class="note">— USER ENTRY POINT — edit this</span><br>
+├── <span class="dir">code/</span><br>
+│&nbsp;&nbsp;&nbsp;├── <span class="file">orchestrate_PCM.sh</span> <span class="note">— submits + monitors perm jobs</span><br>
+│&nbsp;&nbsp;&nbsp;├── <span class="file">run_permutation.sh</span> <span class="note">— one per-perm job (routes by method)</span><br>
+│&nbsp;&nbsp;&nbsp;├── <span class="file">setup_matlab_tm.sh</span> <span class="note">— run once (Section 2b): fetches + patches matlab_tm into deps/matlab_tm/</span><br>
+│&nbsp;&nbsp;&nbsp;├── <span class="rt">setup_reprotm.sh</span> <span class="note">— run once (Section 2c, optional): --pinned/--latest, fetches ReproTM into deps/reprotm_fetched/</span><br>
+│&nbsp;&nbsp;&nbsp;└── <span class="dir">functions/</span> <span class="note">— MATLAB &amp; Python helpers, incl. matlab_tm_wrapper.sh</span><br>
+├── <span class="dir">patches/</span> <span class="note">— template_matching_RH.patch + reprotm_fieldtrip_dconn_fallback.patch, applied by the two setup_*.sh scripts</span><br>
+├── <span class="dir">template_matching/</span> <span class="note">— PCM's own matlab_tm code: matlab_tm_wrapper.m, clean_dscalars_by_size_standalone.m, support_files/ — the rest is fetched (below)</span><br>
+├── <span class="dir">templates/</span><br>
+│&nbsp;&nbsp;&nbsp;├── <span class="dir">template_matching/</span> <span class="note">— .mat seedmaps (matlab_tm / reprotm)</span><br>
+│&nbsp;&nbsp;&nbsp;└── <span class="rt">reprotm/</span> <span class="note">— PCM's own bundled ABCC default reprotm template</span><br>
+└── <span class="dir">deps/</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="dir">cifti-matlab/</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="dir">cifti_connectivity/</span> <span class="note">— dconn-building tool, shared by matlab_tm and reprotm</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="dir">Zscore_dconn/</span> <span class="note">— sectional dconn z-scoring, shared by both methods</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="dir">fieldtrip_fileio/</span> <span class="note">— FieldTrip CIFTI I/O, used by interpolate_noise_for_timeseries</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="dir">matlab_tm/</span> <span class="note">— NOT present until you run code/setup_matlab_tm.sh (Section 2b) — fetched from DCAN-Labs/compare_matrices_to_assign_networks, incl. template_matching_RH.m + its own LICENSE.txt (METHOD=matlab_tm)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="rt">reprotm_fetched/</span> <span class="note">— NOT present until you run code/setup_reprotm.sh (Section 2c) — fetched from KateJGodfrey/ReproTM (METHOD=reprotm)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="dir">Conte69_surfaces/</span> <span class="note">— human surfaces for visualization</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="dir">figure_maker/</span> <span class="note">— Workbench scene files</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;└── <span class="rt">reprotm/</span> <span class="note">— README.md + COMPATIBILITY_NOTES.md for the fetch/bring-your-own ReproTM setup (METHOD=reprotm)</span><br>
+</div>
+
+<hr class="section-divider">
+<p style="color:#888; font-size:0.85em;">PrecisionConfidenceMapping User Guide</p>
+
+</body>
+</html>

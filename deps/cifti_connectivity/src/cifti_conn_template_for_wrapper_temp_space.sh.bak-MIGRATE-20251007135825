@@ -1,0 +1,70 @@
+#! /bin/sh
+
+cd /tmp
+
+subject=${1}
+session=${2}
+derivatives_path=${3}
+tmp_path=${4}
+## Matlab command and usage
+
+echo ${subject}
+echo ${session}
+echo ${derivatives_path}
+echo ${tmp_path}
+
+#sync data:
+#derivatives_path=s3://HCP-Dv2_BIDS/derivatives/abcd-hcp-pipeline
+dtseries_suffix=ses-combined_merged_timeseries.dtseries.nii
+motion_suffix=ses-combined_merged_motion.mat
+L_surf_suffix=ses-combined_hemi-L_space-MNI_mesh-fsLR32k_midthickness.surf.gii
+R_surf_suffix=ses-combined_hemi-R_space-MNI_mesh-fsLR32k_midthickness.surf.gii
+
+#slum_tmp_paths
+
+tmp_dtseries_path=${tmp_path}/${subject}_${dtseries_suffix} 
+tmp_motion_path=${tmp_path}/${subject}_${motion_suffix}
+tmp_Lsurf_path=${tmp_path}/${subject}_${L_surf_suffix}
+tmp_Rsurf_path=${tmp_path}/${subject}_${R_surf_suffix}
+
+echo "Trying to copy file" ${derivatives_path}/${subject}/${session}/func/${subject}_${dtseries_suffix} ${tmp_dtseries_path}
+sg faird -c "cp  ${derivatives_path}/${subject}/${session}/func/${subject}_${dtseries_suffix} ${tmp_dtseries_path}"
+echo "Trying to copy file" ${derivatives_path}/${subject}/${session}/func/${subject}_${motion_suffix} ${tmp_motion_path}
+sg faird -c "cp  ${derivatives_path}/${subject}/${session}/func/${subject}_${motion_suffix} ${tmp_motion_path}"
+echo "Trying to copy file" ${derivatives_path}/${subject}/${session}/anat/${subject}_${L_surf_suffix} ${tmp_Lsurf_path}
+sg faird -c "cp  ${derivatives_path}/${subject}/${session}/anat/${subject}_${L_surf_suffix} ${tmp_Lsurf_path}"
+echo "Trying to copy file" ${derivatives_path}/${subject}/${session}/anat/${subject}_${R_surf_suffix} ${tmp_Rsurf_path}
+sg faird -c "cp  ${derivatives_path}/${subject}/${session}/anat/${subject}_${R_surf_suffix} ${tmp_Rsurf_path}"
+
+echo "New dtseries path is: ${tmp_dtseries_path}"
+echo "New motion path is: ${tmp_motion_path}"
+echo "New Left midthickness surface path is: ${tmp_Lsurf_path}"
+echo "New right midthickness surface path is: ${tmp_Rsurf_path}"
+
+## Matlab command and usage
+
+#cifti_conn_matrix_for_wrapper_continous(wb_command(1), dt_or_ptseries_conc_file(2), series(3), motion_file(4), FD_threshold(5), TR(6), minutes_limit(7), smoothing_kernel(8), left_surface_file(9), right_surface_file(10), bit8(11), remove_outliers(12), additional_mask_conc(13), make_dconn_conc(14), output_directory(15), dtseries_conc(16), use_continous_minutes(17), memory_limit_value(18), keep_conn_matrices (19), dconn_output_filename (20), add_but_donot_divide (21))
+#cifti_conn_template_for_wrapper(wb_command, dt_or_ptseries_conc_file, series, motion_file, FD_threshold, TR, minutes_limit, smoothing_kernel, left_surface_file, right_surface_file, bit8, remove_outliers, additional_mask, make_dconn_conc, output_directory, dtseries_conc, use_continous_minutes,memory_limit_value, keep_conn_matrices, dconn_output_filename, add_but_donot_divide)
+X="addpath('/home/faird/shared/code/internal/utilities/cifti_connectivity/src/'); cifti_conn_matrix_for_wrapper_continous('${1}', '${2}', '${3}','${4}', '${5}', '${6}', '${7}', '${8}', '${9}', '${10}', '${11}', '${12}', '${13}', '${14}', '${15}', '${16}', '${17}', '${18}', '${19}', '${20}', '${21}')"
+
+#Hermosillo R. 11/1/2022
+
+###########################################################################################
+#matlab_exec=/home/exacloud/lustre1/fnl_lab/code/external/GUIs/MATLAB/R2018a/matlab
+#matlab_exec=/home/exacloud/lustre1/fnl_lab/code/external/GUIs/MATLAB/R2016b/matlab
+#matlab_exec=/panfs/roc/msisoft/matlab/R2019a/bin/matlab
+matlab_exec=/common/software/install/migrated/matlab/R2019a/bin/matlab
+RandomHash=`cat /dev/urandom | tr -cd 'a-f0-9' | head -c 16`
+Tempmatlabcommand="matlab_command""$RandomHash"".m"
+
+if [ -f "matlab_command""$RandomHash"".m" ]
+then
+	#echo "matlab_command.m found removing â¦"
+	rm -fR "matlab_command""$RandomHash"".m"
+fi
+
+#echo ${X} 
+echo ${X} > "matlab_command""$RandomHash"".m"
+cat "matlab_command""$RandomHash"".m"
+${matlab_exec} -nodisplay -nosplash < "matlab_command""$RandomHash"".m"
+rm -f "matlab_command""$RandomHash"".m"

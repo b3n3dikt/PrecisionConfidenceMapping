@@ -1,0 +1,68 @@
+--- a/template_matching_RH.m
++++ b/template_matching_RH.m
+@@ -53,8 +53,8 @@
+     end
+     %rmpath('/mnt/max/shared/code/external/utilities/MSCcodebase/Utilities/read_write_cifti') % remove non-working gifti path included with MSCcodebase
+     %rmpath('/home/exacloud/lustre1/fnl_lab/code/external/utilities/MSCcodebase/Utilities/read_write_cifti'); % remove non-working gifti path included with MSCcodebase
+-    addpath(genpath('/projects/standard/faird/shared/code/internal/utilities/plotting-tools'));
+-    addpath(genpath('/projects/standard/faird/shared/code/internal/utilities/Zscore_dconn'));
++    % Zscore_dconn is bundled in PrecisionConfidenceMapping/deps/Zscore_dconn/ and
++    % added to the MATLAB path by config.sh MATLAB_ADDPATH before this runs.
+     warning('on')
+ end
+ 
+@@ -295,7 +295,7 @@
+             if size(eta_to_template_vox,2) == 18
+                 %make copies of the winner-take-all-results and put them
+                 %into an array:
+-                new_subject_labels_scan_thresholds=repmat(new_subject_labels,size(SCANTEMPLATEMINIMUM_thresholds),1);
++                new_subject_labels_scan_thresholds=repmat(new_subject_labels,1,length(SCANTEMPLATEMINIMUM_thresholds));
+                 
+                 for t=1:size(SCANTEMPLATEMINIMUM_thresholds,2)
+                     disp(['testing scan threshold: ' num2str(SCANTEMPLATEMINIMUM_thresholds(t))]);
+@@ -417,20 +417,21 @@
+                     output_cifti_name_orig=output_cifti_name;
+                     
+                 end
+-                save(saving_template, [cifti_output_folder '/' output_cifti_name '.gii'],'ExternalFileBinary')
+-                %save(saving_template, output_cifti_scalar_name, wb_command)
++                % saving_template comes from ciftiopen, which in the bundled
++                % cifti-matlab returns a STRUCT (not a @gifti object). The legacy
++                % `save(...,'ExternalFileBinary')` + `-cifti-convert -from-gifti-ext`
++                % path requires a @gifti object and errors here ("Must be a string
++                % scalar or character vector"). Write the struct straight to a cifti
++                % file with ciftisave (the cifti_write wrapper already used in the
++                % overlap branch below).
+                 switch data_type
+                     case 'parcellated'
+                         output_cifti_scalar_name  = [cifti_output_folder '/' output_cifti_name '.pscalar.nii' ];
+-                        
+                     case 'dense'
+                         output_cifti_scalar_name  = [cifti_output_folder '/' output_cifti_name '.dscalar.nii' ];
+                 end
+-                disp('Converting scalar .gii to .nii')
+-                unix([wb_command ' -cifti-convert -from-gifti-ext ' cifti_output_folder '/' output_cifti_name '.gii ' output_cifti_scalar_name ]);
+-                disp('Removing .gii')
+-                unix(['rm -f ' cifti_output_folder '/' output_cifti_name '.gii']);
+-                unix(['rm -f ' cifti_output_folder '/' output_cifti_name '.dat']);
++                disp(['Saving scalar to ' output_cifti_scalar_name])
++                ciftisave(saving_template, output_cifti_scalar_name, wb_command);
+                 
+             end
+             
+@@ -501,13 +502,13 @@
+         output_cifti_name = [output_cifti_name_orig '_scanthresh' num2str(SCANTEMPLATEMINIMUM_thresholds(t))];
+         output_cifti_scalar_name  = [cifti_output_folder '/' output_cifti_name '.dscalar.nii' ];
+         disp(['Cleaning: ' output_cifti_scalar_name]);
+-        [cleaned_outname_short] = clean_dscalars_by_size_copy_jm_msi(output_cifti_scalar_name,[],[],[],[],30,[],0,1,1); %do not change the make concensus to 1 here. It will ruin your network assingments.
++        [cleaned_outname_short] = clean_dscalars_by_size_standalone(output_cifti_scalar_name,[],[],[],[],30,[],0,1,1); %do not change the make concensus to 1 here. It will ruin your network assingments.
+         cleaned_outname = [cleaned_outname_short '.dscalar.nii'];
+         disp(['Clean file: ' cleaned_outname])
+     end
+ else
+     disp(['Cleaning: ' output_cifti_scalar_name]);
+-    [cleaned_outname_short] = clean_dscalars_by_size_copy_jm_msi(output_cifti_scalar_name,[],[],[],[],30,[],0,1,1); %do not change the make concensus to 1 here. It will ruin your network assingments.
++    [cleaned_outname_short] = clean_dscalars_by_size_standalone(output_cifti_scalar_name,[],[],[],[],30,[],0,1,1); %do not change the make concensus to 1 here. It will ruin your network assingments.
+     cleaned_outname = [cleaned_outname_short '.dscalar.nii'];
+     disp(['Clean file: ' cleaned_outname])
+ end

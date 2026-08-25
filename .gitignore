@@ -1,0 +1,10 @@
+.DS_Store
+*.asv
+
+# Fetched at setup time by code/setup_matlab_tm.sh — never committed. See
+# config.sh's MATLAB_TM_DIR comment for why (UMN license, no redistribution).
+/deps/matlab_tm/
+
+# Fetched at setup time by code/setup_reprotm.sh (--pinned or --latest) —
+# never committed. See config.sh's REPROTM_FETCHED_DIR comment.
+/deps/reprotm_fetched/

@@ -1,0 +1,19 @@
+------------------------------------------------------------
+  Working directory : /projects/standard/smnelson/shared/projects/MSC/data/derivatives/postprocessing/MSC05/PCM/sub-MSC05/ses-combined/ExpData-270m/figures/Percent_Holdout-100/ciftis
+  Threshold(s)      : 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9
+  Individuals       : 1
+  Priority literal  : {'SCAN'}
+  Priority tag      : SCAN
+  Force             : 0
+------------------------------------------------------------
+  -> Skip 0 (already exists): /projects/standard/smnelson/shared/projects/MSC/data/derivatives/postprocessing/MSC05/PCM/sub-MSC05/ses-combined/ExpData-270m/figures/Percent_Holdout-100/ciftis/Thresholded-0_SCAN_priority/PCM_confidence_map_to_bin_all-networks_thresh-0.dscalar.nii
+  -> Run threshold=0.1 outfolder=Thresholded-0.1_SCAN_priority
+  -> Run threshold=0.2 outfolder=Thresholded-0.2_SCAN_priority
+  -> Run threshold=0.3 outfolder=Thresholded-0.3_SCAN_priority
+  -> Run threshold=0.4 outfolder=Thresholded-0.4_SCAN_priority
+  -> Run threshold=0.5 outfolder=Thresholded-0.5_SCAN_priority
+  -> Run threshold=0.6 outfolder=Thresholded-0.6_SCAN_priority
+  -> Run threshold=0.7 outfolder=Thresholded-0.7_SCAN_priority
+  -> Run threshold=0.8 outfolder=Thresholded-0.8_SCAN_priority
+  -> Run threshold=0.9 outfolder=Thresholded-0.9_SCAN_priority
+Done.

@@ -1,0 +1,10 @@
+------------------------------------------------------------
+  Working directory : /projects/standard/smnelson/shared/projects/MSC/data/derivatives/postprocessing/MSC05/PCM/sub-MSC05/ses-combined/ExpData-270m/figures/Percent_Holdout-100/ciftis
+  Threshold(s)      : 0
+  Individuals       : 1
+  Priority literal  : {'SCAN'}
+  Priority tag      : SCAN
+  Force             : 0
+------------------------------------------------------------
+  -> Run threshold=0 outfolder=Thresholded-0_SCAN_priority
+Done.

@@ -1,0 +1,25 @@
+------------------------------------------------------------
+  Working directory : /projects/standard/smnelson/shared/projects/attune/data/derivatives/postprocessing/GPA38/PCM/sub-GPA38/ses-01/ExpData-fullm/figures/Percent_Holdout-100/ciftis/
+  Threshold(s)      : 0.0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+  Individuals       : 1
+------------------------------------------------------------
+  -> Threshold 0
+  -> Threshold 0.1
+  -> Threshold 0.2
+  -> Threshold 0.3
+  -> Threshold 0.4
+  -> Threshold 0.5
+  -> Threshold 0.6
+  -> Threshold 0.7
+  -> Threshold 0.8
+  -> Threshold 0.9
+Finished all thresholds

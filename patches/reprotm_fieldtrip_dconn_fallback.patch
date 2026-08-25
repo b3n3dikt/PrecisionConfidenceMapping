@@ -1,0 +1,29 @@
+diff --git a/code/ReproTM/ReproTM_v1.0.0.py b/code/ReproTM/ReproTM_v1.0.0.py
+index 768168e..b8b4cfe 100644
+--- a/code/ReproTM/ReproTM_v1.0.0.py
++++ b/code/ReproTM/ReproTM_v1.0.0.py
+@@ -135,10 +135,21 @@ if load_data:
+     steptimer = time.time()
+     
+     print('\tloading the correlation matrix')
+-    subject_cii = nb.load(dconn_infile)
+-    corr_mat_full = subject_cii.get_fdata()  # get dconn out of input cifti
++    # ===== PCM-PATCH (fieldtrip-dconn-fallback) =====
++    # nibabel's CIFTI-2 axis parser rejects the subcortical volume affine written by
++    # MATLAB FieldTrip's ft_write_cifti_mod (valid CIFTI-2, but stricter than what
++    # nibabel's reader expects) with: ValueError: Affine transformation should be a
++    # 4x4 array. Dconns written by wb_command don't trigger this. Only the raw NxN
++    # correlation matrix is needed here (not CIFTI structure/axis metadata), so fall
++    # back to reading the file as a raw NIfTI-2 volume on this specific error.
++    try:
++        subject_cii = nb.load(dconn_infile)
++        corr_mat_full = subject_cii.get_fdata()  # get dconn out of input cifti
++        del subject_cii # save memory
++    except ValueError:
++        corr_mat_full = nb.Nifti2Image.from_filename(dconn_infile).get_fdata()
++    # ===== END PCM-PATCH (fieldtrip-dconn-fallback) =====
+     greyordinates = corr_mat_full.shape[0]  # get total number of greyordinates from input cifti
+-    del subject_cii # save memory
+     print('\tnumber of greyordinates: ' + str(greyordinates))
+     print('\t ')
+     
