@@ -60,14 +60,17 @@ if n_L == 0 || n_R == 0
 end
 % The 9-block partition below assumes brainordinates are laid out as
 % [left cortex][right cortex][subcortical, if any] -- i.e. left cortex starts
-% at index 0 and right cortex starts immediately after it. That's the
-% standard HCP/DCAN dense-connectome layout (and what both the FieldTrip
-% version and the original hardcoded-index version of this function already
-% assumed), but verify it explicitly rather than assume it silently, since a
-% future non-human/non-standard template could in principle differ.
-if L_start ~= 0 || R_start ~= n_L
+% first and right cortex starts immediately after it. That's the standard
+% HCP/DCAN dense-connectome layout (and what both the FieldTrip version and
+% the original hardcoded-index version of this function already assumed),
+% but verify it explicitly rather than assume it silently, since a future
+% non-human/non-standard template could in principle differ.
+% NOTE: cifti-matlab's models{i}.start is 1-based (cifti_parse_xml.m adds 1
+% to the CIFTI file's 0-based IndexOffset), so a left-cortex-first layout
+% means L_start == 1, not 0.
+if L_start ~= 1 || R_start ~= n_L + 1
     error(['Zscore_dconn: expected CORTEX_LEFT then CORTEX_RIGHT contiguous ' ...
-           'at the start of the dconn (left at 0, right at ' num2str(n_L) '), ' ...
+           'at the start of the dconn (left at 1, right at ' num2str(n_L + 1) '), ' ...
            'but found left at ' num2str(L_start) ' and right at ' ...
            num2str(R_start) '. This file''s brainordinate layout does not ' ...
            'match what the 9-block partition logic assumes.']);
