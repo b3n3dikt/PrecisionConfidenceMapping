@@ -1,6 +1,26 @@
 --- a/template_matching_RH.m
 +++ b/template_matching_RH.m
-@@ -53,8 +53,8 @@
+@@ -36,7 +36,18 @@
+ [code_dir,~] = fileparts(this_code);
+ support_folder=[code_dir '/support_files']; %find support files in the code directory.
+ addpath(genpath(support_folder));
+-settings=settings_comparematrices;%
++% Use PCM's own portable settings function instead of the upstream one --
++% the upstream settings_comparematrices() guesses your server from pwd() and
++% addpath()s a battery of hardcoded absolute paths (including an old
++% gifti-1.6 toolbox that shadows cifti-matlab's ciftiopen with a @gifti-
++% returning one on any real match, e.g. any /projects/... cluster path,
++% which is exactly what MSI's paths are -- this crashed Zscore_dconn with
++% "Reference to non-existent field 'diminfo'" on the first real cluster
++% test, 2026-08-25/26). settings_comparematrices_jm_msi (PCM's own
++% template_matching/support_files/) only contains no-op placeholders,
++% since PCM's MATLAB_ADDPATH already sets up cifti-matlab/Zscore_dconn/etc.
++% correctly before this runs.
++settings=settings_comparematrices_jm_msi;%
+ np=size(settings.path,2);
+ 
+ amIdeployed = isdeployed();
+@@ -53,8 +64,8 @@
      end
      %rmpath('/mnt/max/shared/code/external/utilities/MSCcodebase/Utilities/read_write_cifti') % remove non-working gifti path included with MSCcodebase
      %rmpath('/home/exacloud/lustre1/fnl_lab/code/external/utilities/MSCcodebase/Utilities/read_write_cifti'); % remove non-working gifti path included with MSCcodebase
@@ -11,7 +31,7 @@
      warning('on')
  end
  
-@@ -295,7 +295,7 @@
+@@ -295,7 +306,7 @@
              if size(eta_to_template_vox,2) == 18
                  %make copies of the winner-take-all-results and put them
                  %into an array:
@@ -20,7 +40,7 @@
                  
                  for t=1:size(SCANTEMPLATEMINIMUM_thresholds,2)
                      disp(['testing scan threshold: ' num2str(SCANTEMPLATEMINIMUM_thresholds(t))]);
-@@ -417,20 +417,21 @@
+@@ -417,20 +428,21 @@
                      output_cifti_name_orig=output_cifti_name;
                      
                  end
@@ -50,7 +70,7 @@
                  
              end
              
-@@ -501,13 +502,13 @@
+@@ -501,13 +513,13 @@
          output_cifti_name = [output_cifti_name_orig '_scanthresh' num2str(SCANTEMPLATEMINIMUM_thresholds(t))];
          output_cifti_scalar_name  = [cifti_output_folder '/' output_cifti_name '.dscalar.nii' ];
          disp(['Cleaning: ' output_cifti_scalar_name]);
