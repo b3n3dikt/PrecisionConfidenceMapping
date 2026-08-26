@@ -117,6 +117,19 @@ for i=1:length(dscalarwithassignments)
     regularized_ciftifile = dscalarwithassignments {i};
 
     cifti_data = ft_read_cifti_mod(regularized_ciftifile); assigns = cifti_data.data;
+    % STANDALONE PCM: also open the same file via cifti-matlab (ciftiopen), to use
+    % as the write-out template below instead of ft_write_cifti_mod. FieldTrip's
+    % ft_write_cifti_mod reconstructs each volume structure's voxel index list
+    % from its own internal representation on write, and for this pipeline's
+    % greyordinate template that reconstruction was found to actually produce
+    % overlapping voxel indices ("volume models may not reuse voxels" -- file
+    % unreadable by wb_command/wb_view), even though ft_read_cifti_mod reads the
+    % same file back in without error. ciftiopen/ciftisave (cifti-matlab) round-trip
+    % this file's diminfo losslessly (verified: it's a pure passthrough of the
+    % parsed VoxelIndicesIJK, no reconstruction), so re-using THIS file's own
+    % diminfo as the write template and only swapping in the recolored .cdata
+    % sidesteps the FieldTrip writer bug entirely.
+    cifti_template = ciftiopen(regularized_ciftifile, wb_command);
 
     assigns(assigns<0) = 0; %Assignments that are eqaul to -1 (unassigned), set the to 0.
     assigns(isnan(assigns)) = 0; % Set nans to 0.
@@ -239,7 +252,10 @@ for i=1:length(dscalarwithassignments)
         dotsloc = strfind(regularized_ciftifile,'.');
         basename = regularized_ciftifile(1:(dotsloc(end-1)-1));
         outname = [basename '_allcolumns_recolored'];
-        ft_write_cifti_mod(outname,cifti_data);
+        % STANDALONE PCM: write via cifti-matlab (ciftisave), not FieldTrip's
+        % ft_write_cifti_mod -- see the ciftiopen(regularized_ciftifile) note above.
+        cifti_template.cdata = cifti_data.data;
+        ciftisave(cifti_template, [outname '.dscalar.nii'], wb_command);
         set_cifti_powercolors([outname '.dscalar.nii'])
 
 
@@ -474,7 +490,14 @@ for i=1:length(dscalarwithassignments)
     dotsloc = strfind(regularized_ciftifile,'.');
     basename = regularized_ciftifile(1:(dotsloc(end-1)-1));
     outname = [basename '_recolored'];
-    ft_write_cifti_mod(outname,cifti_data);
+    % STANDALONE PCM: write via cifti-matlab (ciftisave), not FieldTrip's
+    % ft_write_cifti_mod -- see the ciftiopen(regularized_ciftifile) note above.
+    cifti_template.cdata = cifti_data.data;
+    if overlap == 0
+        ciftisave(cifti_template, [outname '.dscalar.nii'], wb_command);
+    else
+        ciftisave(cifti_template, [outname '.dtseries.nii'], wb_command);
+    end
     if overlap ==0
 
         set_cifti_powercolors([outname '.dscalar.nii'])
