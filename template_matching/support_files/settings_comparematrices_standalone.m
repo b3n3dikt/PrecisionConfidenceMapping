@@ -1,6 +1,6 @@
-function settings=settings_comparematrices_jm_msi()
+function settings=settings_comparematrices_standalone()
 % =============================================================================
-% settings_comparematrices_jm_msi.m  —  Standalone PCM Settings
+% settings_comparematrices_standalone.m  —  Standalone PCM Settings
 % =============================================================================
 % CHANGES FROM ORIGINAL:
 %   Replaced all 16 hardcoded server-absolute paths with paths computed

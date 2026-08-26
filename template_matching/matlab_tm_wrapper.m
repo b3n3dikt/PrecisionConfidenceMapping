@@ -103,7 +103,7 @@ this_code = which('matlab_tm_wrapper');
 [code_dir,~] = fileparts(this_code);
 support_folder=[code_dir '/support_files']; %find support files in the code directory.
 addpath(genpath(support_folder));
-settings=settings_comparematrices_jm_msi;%
+settings=settings_comparematrices_standalone;%
 np=size(settings.path,2);
 
 disp('Attempting to add neccesaary paths and functions.')

@@ -12,7 +12,7 @@ function [outname] = clean_dscalars_by_size_standalone(dscalarwithassignments,ma
 % ("Cannot parse directory structure to add dependencies automatically")
 % on any machine whose hostname/directory layout it doesn't recognize —
 % i.e. on any standalone PCM install. This file instead self-locates via
-% mfilename and loads settings_comparematrices_jm_msi (PCM's already
+% mfilename and loads settings_comparematrices_standalone (PCM's already
 % environment-agnostic settings file), so it works anywhere.
 %
 %This function cleans up networks.
@@ -65,12 +65,12 @@ this_code = mfilename('fullpath');
 support_folder=[code_dir '/support_files']; %find support files in the code directory.
 %support_folder=[pwd '/support_files'];
 addpath(genpath(support_folder));
-% STANDALONE PCM: settings_comparematrices_jm_msi (not settings_comparematrices)
+% STANDALONE PCM: settings_comparematrices_standalone (not settings_comparematrices)
 % is the already-relocatable/de-hardcoded settings file PCM ships — see its own
 % header comment. settings_comparematrices.m is the untouched upstream version
 % (fetched, hardcoded server paths and all); calling it here would silently
 % reintroduce hardcoded paths through this back door.
-settings=settings_comparematrices_jm_msi;%
+settings=settings_comparematrices_standalone;%
 np=size(settings.path,2);
 
 if isdeployed

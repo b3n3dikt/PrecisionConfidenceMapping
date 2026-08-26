@@ -12,11 +12,11 @@
 +% returning one on any real match, e.g. any /projects/... cluster path,
 +% which is exactly what MSI's paths are -- this crashed Zscore_dconn with
 +% "Reference to non-existent field 'diminfo'" on the first real cluster
-+% test, 2026-08-25/26). settings_comparematrices_jm_msi (PCM's own
++% test, 2026-08-25/26). settings_comparematrices_standalone (PCM's own
 +% template_matching/support_files/) only contains no-op placeholders,
 +% since PCM's MATLAB_ADDPATH already sets up cifti-matlab/Zscore_dconn/etc.
 +% correctly before this runs.
-+settings=settings_comparematrices_jm_msi;%
++settings=settings_comparematrices_standalone;%
  np=size(settings.path,2);
  
  amIdeployed = isdeployed();
