@@ -19,7 +19,10 @@
 # What this does:
 #   1. git clone the upstream repo into MATLAB_TM_DIR (from config.sh)
 #   2. git checkout the pinned commit (MATLAB_TM_PINNED_COMMIT in config.sh)
-#   3. git apply patches/template_matching_RH.patch — see that file for a
+#   3. Normalize template_matching_RH.m to LF line endings — upstream ships it
+#      with CRLF, but the patch (and every regeneration of it so far) is LF,
+#      so `git apply` fails on a byte-for-byte fresh clone without this step.
+#   4. git apply patches/template_matching_RH.patch — see that file for a
 #      full explanation of each hunk (cifti-matlab struct-vs-gifti fix, a
 #      repmat dimension fix, and removal of hardcoded server addpaths).
 #
@@ -64,6 +67,10 @@ git clone --quiet "${UPSTREAM_URL}" "${MATLAB_TM_DIR}"
 
 echo "[setup_matlab_tm] Checking out pinned commit ${MATLAB_TM_PINNED_COMMIT}"
 git -C "${MATLAB_TM_DIR}" checkout --quiet "${MATLAB_TM_PINNED_COMMIT}"
+
+echo "[setup_matlab_tm] Normalizing template_matching_RH.m to LF line endings"
+tr -d '\r' < "${MATLAB_TM_DIR}/template_matching_RH.m" > "${MATLAB_TM_DIR}/template_matching_RH.m.lf"
+mv "${MATLAB_TM_DIR}/template_matching_RH.m.lf" "${MATLAB_TM_DIR}/template_matching_RH.m"
 
 echo "[setup_matlab_tm] Applying ${PATCH_FILE}"
 (cd "${MATLAB_TM_DIR}" && git apply "${PATCH_FILE}")
