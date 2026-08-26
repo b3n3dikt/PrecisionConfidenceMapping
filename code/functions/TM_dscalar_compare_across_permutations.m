@@ -156,7 +156,20 @@ if make_NetConfMaps == 1
     % (Optional) Build full paths to the files if needed
     fullFilePaths = fullfile({fileListStruct.folder}, fileNames);
     lowercolor=1;
-    uppercolor=num_networks; % was hardcoded 18 (human network count); num_networks computed above from real data
+    % FIXED at 18, matching the 'power_surf' colorscheme below (a fixed 1-18 Power/ABCC
+    % network palette, same convention set_cifti_powercolors.m encodes for the per-perm
+    % dscalars). Was briefly changed to num_networks=length(unique(tmpdata)) (line 26) in
+    % PCM_multimethod for macaque support, but that's WRONG for this fixed palette:
+    % num_networks is only how many of the 18 network IDs are actually PRESENT in one
+    % subject's data (e.g. 15 if that subject has no vertices in 3 of the networks), not the
+    % palette's scale ceiling -- using it here compresses the 1-18 color scale down to
+    % 1-num_networks, so the same network ID renders a different color than the fixed
+    % palette intends. This repo was rsync'd from PCM_multimethod after that regression
+    % landed there, so it inherited the same bug. Fixed to 18 here too (user confirmed
+    % 2026-08-26: real network IDs in these dscalars are a subset of 1-18, e.g. missing
+    % 4/6/17, and the power_surf bar maps 1=red...18=magenta regardless of which IDs are
+    % present).
+    uppercolor=18;
     lowerthresh=0.1;
     upperthresh=30;
     colorscheme=[ 'power_surf' ]
