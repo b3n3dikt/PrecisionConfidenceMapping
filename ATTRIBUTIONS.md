@@ -62,7 +62,7 @@ not yet created as of this writing) **and** the method(s) you used:
 
 | Method | Cite |
 |---|---|
-| `matlab_tm` | Hermosillo et al. (see PCM's own publication for the exact reference) |
+| `matlab_tm` | Hermosillo, R.J.M., Moore, L.A., Feczko, E. et al. A precision functional atlas of personalized network topography and probabilities. *Nat Neurosci* 27, 1000–1013 (2024). https://doi.org/10.1038/s41593-024-01596-5 |
 | `reprotm` | The ReproTM paper (Godfrey et al.) — see [KateJGodfrey/ReproTM](https://github.com/KateJGodfrey/ReproTM) for the current reference |
 | Human surface visualization | The HCP minimal preprocessing pipelines paper (Glasser et al., NeuroImage 2013) and/or the Conte69 atlas paper (Van Essen et al.) — verify exact citation before use |
 
