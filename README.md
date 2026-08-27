@@ -4,8 +4,8 @@
 quantifying per-vertex network assignment confidence in fMRI data.
 
 This package supports multiple community detection methods and is fully
-self-contained: copy the entire `PrecisionConfidenceMapping/` folder to any HPC server
-and run. No server-specific paths to edit.
+self-contained: clone the repo onto any HPC server and run. No server-specific
+paths to edit.
 
 ---
 
@@ -53,9 +53,19 @@ parameter in `run_PCM.sh`:
 
 ## Quick start
 
-### 1. Copy to your server
+### 1. Get the code onto your server
+
+Clone directly on a login node (or anywhere else with internet access — see the
+`matlab_tm`/`reprotm` setup notes below for why that matters):
 
 ```bash
+git clone https://github.com/b3n3dikt/PrecisionConfidenceMapping.git
+```
+
+No internet on your cluster at all? Clone locally instead and copy the folder over:
+
+```bash
+git clone https://github.com/b3n3dikt/PrecisionConfidenceMapping.git
 scp -r PrecisionConfidenceMapping/ yourserver:/path/to/destination/
 ```
 
