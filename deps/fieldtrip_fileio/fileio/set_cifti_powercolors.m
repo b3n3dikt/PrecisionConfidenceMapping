@@ -7,19 +7,11 @@ function set_cifti_powercolors(filename)
 % PROVENANCE: this file is not authored by PCM. It's a WashU/DCAN lab helper
 % (FieldTrip-derived -- see the embedded copyright notices on read_nifti2_hdr/
 % write_nifti2_hdr below) that clean_dscalars_by_size_standalone.m has always
-% called but never bundled itself; every copy of the calling code checked while
-% tracking this down (the original March server download of
-% compare_matrices_to_assign_networks/, PCM_standalone, and the upstream
-% DCAN-Labs/compare_matrices_to_assign_networks GitHub repo) also calls it
-% without defining it, meaning it always resolved from something outside any
-% of those trees -- almost certainly a shared lab MATLAB path on the cluster.
-% This exact copy is vendored from PCM_multimethod's deps/infomap/1_Allvisit_
-% Infomap/COMBINED_UTILS/washu_helpers/set_cifti_powercolors.m (2026-08-26) --
-% it only ever worked there because matlab_tm's addpath happened to share
-% infomap's COMBINED_UTILS directory, not because it's semantically an infomap
-% function. Vendored here (rather than left as an assumed ambient dependency)
-% so the v1 release stays self-contained. If a canonical shared-lab copy turns
-% up later, this can be swapped out for a config.sh-pointed external path.
+% called but never bundled itself, presumably relying on it being available
+% via a shared lab MATLAB path rather than shipping with any given project's
+% own code. Vendored here so the release stays self-contained rather than
+% depending on an ambient path. If a canonical shared-lab copy turns up, this
+% can be swapped out for a config.sh-pointed external path instead.
 
 
 %insertstring = sprintf('\n\t<MetaData>\n\t\t<MD>\n\t\t\t<Name>PaletteColorMapping</Name>\n\t\t\t<Value>&lt;PaletteColorMapping Version=&quot;1&quot;&gt;\n\t&lt;ScaleMode&gt;MODE_USER_SCALE&lt;/ScaleMode&gt;\n\t&lt;AutoScalePercentageValues&gt;98.000000 2.000000 2.000000 98.000000&lt;/AutoScalePercentageValues&gt;\n\t&lt;AutoScaleAbsolutePercentageValues&gt;2.000000 98.000000&lt;/AutoScaleAbsolutePercentageValues&gt;\n\t&lt;UserScaleValues&gt;-100.000000 0.000000 1.000000 18.000000&lt;/UserScaleValues&gt;\n\t&lt;PaletteName&gt;power_surf&lt;/PaletteName&gt;\n\t&lt;InterpolatePalette&gt;true&lt;/InterpolatePalette&gt;\n\t&lt;DisplayPositiveData&gt;true&lt;/DisplayPositiveData&gt;\n\t&lt;DisplayZeroData&gt;false&lt;/DisplayZeroData&gt;\n\t&lt;DisplayNegativeData&gt;false&lt;/DisplayNegativeData&gt;\n\t&lt;ThresholdTest&gt;THRESHOLD_TEST_SHOW_OUTSIDE&lt;/ThresholdTest&gt;\n\t&lt;ThresholdType&gt;THRESHOLD_TYPE_OFF&lt;/ThresholdType&gt;\n\t&lt;ThresholdFailureInGreen&gt;false&lt;/ThresholdFailureInGreen&gt;\n\t&lt;ThresholdNormalValues&gt;-1.000000 1.000000&lt;/ThresholdNormalValues&gt;\n\t&lt;ThresholdMappedValues&gt;-1.000000 1.000000&lt;/ThresholdMappedValues&gt;\n\t&lt;ThresholdMappedAvgAreaValues&gt;-1.000000 1.000000&lt;/ThresholdMappedAvgAreaValues&gt;\n\t&lt;ThresholdDataName&gt;&lt;/ThresholdDataName&gt;\n\t&lt;ThresholdRangeMode&gt;PALETTE_THRESHOLD_RANGE_MODE_MAP&lt;/ThresholdRangeMode&gt;\n\t&lt;ThresholdLowHighLinked&gt;false&lt;/ThresholdLowHighLinked&gt;\n&lt;/PaletteColorMapping&gt;\n</Value>\n\t\t</MD>\n\t</MetaData>');

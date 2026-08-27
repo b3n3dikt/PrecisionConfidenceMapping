@@ -22,7 +22,7 @@ everything below.
 | Component | Source | License | Fetched by |
 |---|---|---|---|
 | Template matching core (`template_matching_RH.m` et al.) | R. Hermosillo / University of Minnesota — [DCAN-Labs/compare_matrices_to_assign_networks](https://github.com/DCAN-Labs/compare_matrices_to_assign_networks) | UMN provisional patent notice — non-profit/research use only, no redistribution without approval (see the fetched copy's own `LICENSE.txt`) | `code/setup_matlab_tm.sh` |
-| ReproTM (`ReproTM_v1.0.0.py`, `minsize_v1.0.0.py`) | Kate Godfrey and collaborators — [KateJGodfrey/ReproTM](https://github.com/KateJGodfrey/ReproTM) | **No LICENSE file as of this writing** — see `release_prep/REPROTM_CHANGES_FOR_KATE.md` for the outstanding question raised with the author | `code/setup_reprotm.sh` |
+| ReproTM (`ReproTM_v1.0.0.py`, `minsize_v1.0.0.py`) | Kate Godfrey and collaborators — [KateJGodfrey/ReproTM](https://github.com/KateJGodfrey/ReproTM) | **No LICENSE file as of this writing** — used here as attributed, unmodified-except-for-PCM's-own-patches upstream code | `code/setup_reprotm.sh` |
 
 PCM's own two small compatibility patches applied to the above are documented in
 `patches/template_matching_RH.patch` and `patches/reprotm_fieldtrip_dconn_fallback.patch`.
@@ -35,8 +35,8 @@ PCM's own two small compatibility patches applied to the above are documented in
 |---|---|---|---|---|
 | `cifti-matlab` | Washington University School of Medicine (+ Robert Oostenveld, `read_nifti2_hdr.m`) — [Washington-University/cifti-matlab](https://github.com/Washington-University/cifti-matlab) | GPL v2+ | Reading/writing CIFTI files — `ciftiopen`/`ciftisave`, used by every method | Pinned at commit `bcb6da2` (2020-10-14) plus one small local fix (`cifti_read.m`, struct-array indexing) not yet pushed upstream |
 | `cifti_connectivity` | DCAN Labs — [DCAN-Labs/cifti-connectivity](https://github.com/DCAN-Labs/cifti-connectivity) | BSD 3-Clause | Building dense connectivity matrices (dconns) for matlab_tm and reprotm | Pinned at commit `70d7957` (2023-07-31) plus several local fixes (a race-condition fix in `cifti_conn_matrix_for_wrapper_continous.m`, better error logging, an optional `FISHER_Z` env-var toggle for the `-fisher-z` correlation flag) not yet pushed upstream |
-| `interpolate_noise_for_timeseries` | DCAN Labs — R. Hermosillo (credited directly in the tool's own header comment) — [DCAN-Labs/interpolate_noise_for_timeseries](https://github.com/DCAN-Labs/interpolate_noise_for_timeseries) (private repo) | **No LICENSE file found** | Injecting noise into zeroed-out grayordinates before smoothing | Worth checking with the author before public release, same as ReproTM's gap |
-| `figure_maker` | DCAN Labs — R. Hermosillo and/or T. Madison | **No LICENSE file found** | Generating Workbench scene images (`.png`) from `.dscalar`/`.dlabel` outputs | Own README, own upstream repo — worth checking with the author(s) |
+| `interpolate_noise_for_timeseries` | DCAN Labs — R. Hermosillo (credited directly in the tool's own header comment) — [DCAN-Labs/interpolate_noise_for_timeseries](https://github.com/DCAN-Labs/interpolate_noise_for_timeseries) (private repo) | **No LICENSE file found** | Injecting noise into zeroed-out grayordinates before smoothing | License status not yet confirmed with the author |
+| `figure_maker` | DCAN Labs — R. Hermosillo and/or T. Madison | **No LICENSE file found** | Generating Workbench scene images (`.png`) from `.dscalar`/`.dlabel` outputs | Own README, own upstream repo — license status not yet confirmed with the author(s) |
 | `Zscore_dconn` | DCAN Labs / PCM lab lineage | Not separately licensed | Sectional (per-hemisphere/subcortex) z-scoring of dconns, used by matlab_tm and reprotm | Uses `cifti-matlab`'s own `diminfo` for its partition boundaries (portable to any resolution) — no FieldTrip dependency |
 | FieldTrip `fileio` module (+ `gifti`/`@xmltree`/`utilities` helpers), `deps/fieldtrip_fileio/` | FieldTrip project / Guillaume Flandin and others | `fileio`: **GPLv2** (confirmed — `fileio/COPYING`). `gifti`/`@xmltree`/`utilities`: not individually verified | CIFTI reading (`ft_read_cifti_mod`) needed by `interpolate_noise_for_timeseries.m` | Independent third-party code |
 | Conte69 human surfaces | Van Essen Lab / Human Connectome Project | Public HCP release, no bundled LICENSE file | Visualization (figure generation) | See "Citing PCM and its components" below |
@@ -49,10 +49,9 @@ A few of the tools above (`interpolate_noise_for_timeseries`, `figure_maker`,
 and the `gifti`/`@xmltree`/`utilities` pieces of `deps/fieldtrip_fileio/`)
 don't ship an explicit license.
 That's not the same as "no restrictions" — it just means default copyright applies
-and nobody has explicitly granted redistribution rights. This is the same situation
-ReproTM was in (see `release_prep/REPROTM_CHANGES_FOR_KATE.md`) before that
-conversation started. Before this repo goes public, each of these authors should
-get the same kind of "can we include this?" check.
+and nobody has explicitly granted redistribution rights. ReproTM was in the same
+situation until its author was asked directly; the same "can we include this?"
+check is still outstanding for the tools listed above.
 
 ---
 
@@ -67,6 +66,6 @@ not yet created as of this writing) **and** the method(s) you used:
 | `reprotm` | The ReproTM paper (Godfrey et al.) — see [KateJGodfrey/ReproTM](https://github.com/KateJGodfrey/ReproTM) for the current reference |
 | Human surface visualization | The HCP minimal preprocessing pipelines paper (Glasser et al., NeuroImage 2013) and/or the Conte69 atlas paper (Van Essen et al.) — verify exact citation before use |
 
-*(That last row is flagged "verify exact citation" deliberately — I did not
-have high enough confidence in the precise journal/year to state it here without
-checking, and getting a citation wrong is worse than leaving a placeholder.)*
+*(That last row is flagged "verify exact citation" deliberately — the precise
+journal/year hasn't been double-checked, and getting a citation wrong is worse
+than leaving a placeholder.)*

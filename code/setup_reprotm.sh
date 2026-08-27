@@ -4,9 +4,8 @@
 # =============================================================================
 # METHOD=reprotm needs ReproTM_v1.0.0.py + minsize_v1.0.0.py from
 # KateJGodfrey/ReproTM. Unlike matlab_tm, ReproTM has no license restricting
-# redistribution (it's just missing a LICENSE file — see
-# release_prep/REPROTM_CHANGES_FOR_KATE.md), so this offers TWO modes instead
-# of matlab_tm's one:
+# redistribution (as of this writing it just doesn't ship a LICENSE file at
+# all), so this offers TWO modes instead of matlab_tm's one:
 #
 #   --pinned (DEFAULT): clone at REPROTM_PINNED_COMMIT (config.sh), apply
 #     PCM's compatibility patches unconditionally — they were built and
@@ -23,10 +22,13 @@
 #     improvements automatically, at the cost of "might need a manual fix if
 #     Kate changed a lot" — see deps/reprotm/COMPATIBILITY_NOTES.md.
 #
-# Run this ONCE, on a machine with internet access (a login node or your own
-# workstation) — NOT inside a SLURM job. run_PCM.sh checks REPROTM_DIR exists
-# before submitting any jobs when METHOD=reprotm, and will point you back
-# here if it's missing.
+# Run this ONCE, on a machine with internet access — a login node, your own
+# workstation, or a compute node if your cluster's compute nodes happen to
+# have internet access. Many HPC clusters firewall compute nodes off from the
+# internet, in which case this needs to run somewhere that does have it
+# (e.g. a login node) before submitting any SLURM jobs. run_PCM.sh checks
+# REPROTM_DIR exists before submitting any jobs when METHOD=reprotm, and
+# will point you back here if it's missing.
 #
 # Known patches (patches/reprotm_*.patch):
 #   - reprotm_fieldtrip_dconn_fallback.patch: nb.load() crashes on
@@ -125,7 +127,8 @@ echo "${MODE}" > "${MODE_MARKER}"
 
 echo "[setup_reprotm] Done. ReproTM (--${MODE} mode) is ready at ${REPROTM_FETCHED_DIR}"
 echo "  (${_applied} patch(es) applied, ${_skipped} skipped)."
-echo "[setup_reprotm] No LICENSE file ships with ReproTM as of this writing — see"
-echo "  release_prep/REPROTM_CHANGES_FOR_KATE.md for the outstanding licensing question."
+echo "[setup_reprotm] No LICENSE file ships with ReproTM (KateJGodfrey/ReproTM) as of this"
+echo "  writing. It's used here as attributed, unmodified-except-for-the-patches-above upstream"
+echo "  code, not redistributed as part of PCM's own licensed code."
 echo "[setup_reprotm] REPROTM_DIR resolves here automatically (config.sh) unless you've set"
 echo "  REPROTM_DIR yourself in cluster.conf."
