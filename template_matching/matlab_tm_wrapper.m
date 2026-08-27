@@ -19,8 +19,15 @@ smoothing_kernal = 2.25;
 bit8 = 0;
 %TR=1.761;
 %minutes_limit = 45;
-% for ABCD data
-minutes_limit = 10; 
+% 'none' = use all frames handed to this function -- PCM's own truncation
+% (--startmins) and shuffling already happened upstream before this wrapper
+% ever runs, so this must not re-truncate on top of that. The reprotm/infomap
+% shared dconn-building path (code/run_permutation.sh) already passes 'none'
+% here for the same reason. This was hardcoded to a fixed 10 (leftover from
+% an unrelated ABCD-specific convention in the original upstream code) --
+% meant every matlab_tm dconn, at every --startmins setting, was silently
+% built from only 10 minutes of data instead of the run's actual data.
+minutes_limit = 'none';
 series = 'dtseries';
 data_type = 'dense';
 %wb_command = 'LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6 OMP_NUM_THREADS=2 /usr/local/bin/wb_command';
