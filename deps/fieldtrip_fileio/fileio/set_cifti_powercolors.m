@@ -148,8 +148,17 @@ end
 
 xmldat_orig = xmldat;
 
+% PCM: cifti-matlab's own ciftisave() always writes its own <MetaData> element
+% right after <Matrix> (a "Provenance" entry -- see cifti_write_xml.m), unlike
+% the original FieldTrip writer this function was built against, which never
+% wrote one. A blind insertstring insertion here would then create a SECOND
+% <MetaData> element as a sibling of that one, which is invalid CIFTI-2 --
+% wb_command rejects it outright ("MetaData may only be specified once in
+% Matrix"). merge_metadata_after() checks for that existing element and, if
+% found, inserts just the <MD> entry inside it instead of wrapping a duplicate
+% <MetaData> around it.
 for i = 1:length(rightafterstrings)
-    xmldat = strrep(xmldat, rightafterstrings{i}, [rightafterstrings{i} insertstring]);
+    xmldat = merge_metadata_after(xmldat, rightafterstrings{i}, insertstring);
 end
 
 whitespace = false(size(xmldat));
@@ -256,6 +265,58 @@ fclose(fid);
 
 
 
+end
+
+function xmldat = merge_metadata_after(xmldat, marker, wrapped_md)
+% PCM addition (not part of the original FieldTrip-derived code above).
+%
+% Inserts wrapped_md (a full '<MetaData><MD>...</MD></MetaData>' block)
+% immediately after every occurrence of `marker` in xmldat -- UNLESS a
+% <MetaData> element is already sitting there (e.g. cifti-matlab's ciftisave
+% always writes one right after <Matrix>), in which case only wrapped_md's
+% inner <MD>...</MD> entry is inserted, inside that existing <MetaData>
+% element, so the result never has two sibling <MetaData> elements at the
+% same level (CIFTI-2 permits only one).
+md_open = '<MetaData>';
+md_close = '</MetaData>';
+% wrapped_md is not guaranteed to start exactly with md_open (e.g. this
+% file's own insertstring has a leading '\n\t' before '<MetaData>') -- locate
+% it rather than assuming position 1.
+md_open_pos = strfind(wrapped_md, md_open);
+inner_md = wrapped_md(md_open_pos(1) + length(md_open) : end - length(md_close));
+whitespace_chars = sprintf(' \t\r\n');
+
+search_from = 1;
+while true
+    hit = strfind(xmldat(search_from:end), marker);
+    if isempty(hit)
+        break
+    end
+    marker_pos = hit(1) + search_from - 1;
+    after_marker = marker_pos + length(marker);
+
+    % Tolerate whitespace/newlines between the marker and a following
+    % <MetaData> tag, in case the writer that produced this XML pretty-prints
+    % (unlike cifti-matlab's own writer, which packs tags with no whitespace,
+    % as far as observed -- but don't rely on that being universally true).
+    probe = after_marker;
+    while probe <= length(xmldat) && any(xmldat(probe) == whitespace_chars)
+        probe = probe + 1;
+    end
+    has_existing_md = (probe + length(md_open) - 1 <= length(xmldat)) && ...
+        strcmp(xmldat(probe:probe + length(md_open) - 1), md_open);
+
+    if has_existing_md
+        insert_at = probe + length(md_open);
+        to_insert = inner_md;
+    else
+        insert_at = after_marker;
+        to_insert = wrapped_md;
+    end
+
+    xmldat = [xmldat(1:insert_at - 1) to_insert xmldat(insert_at:end)];
+    search_from = insert_at + length(to_insert);
+end
 end
 
 
