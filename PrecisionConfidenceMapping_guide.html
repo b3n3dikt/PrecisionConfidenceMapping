@@ -615,6 +615,7 @@ sbatch run_PCM.sh ... --method reprotm --template /path/to/my_seedmap.mat
 <p>Almost everything PCM needs is bundled in the package. The only things you supply are a few cluster modules, your data, and (per method) one or two external pieces noted below.</p>
 <table>
   <tr><th>Dependency</th><th>How loaded</th><th>Notes</th></tr>
+  <tr><td><strong>Operating system</strong></td><td>—</td><td>Linux (developed and tested on MSI, a SLURM-based HPC cluster). Not designed for macOS or Windows — needs a SLURM scheduler, Linux builds of MATLAB/Workbench, and a per-permutation memory footprint well beyond a typical laptop regardless of OS (Section 4l).</td></tr>
   <tr><td><strong>SLURM</strong></td><td>System scheduler</td><td>Required. PCM submits one SLURM job per permutation.</td></tr>
   <tr><td><strong>MATLAB</strong></td><td><code>module load matlab</code></td><td>R2019a or later. Set <code>MATLAB_MODULE</code> in cluster.conf.</td></tr>
   <tr><td><strong>Workbench</strong> (<code>wb_command</code>)</td><td><code>module load workbench</code></td><td>CIFTI operations and smoothing. Set <code>WORKBENCH_MODULE</code>.</td></tr>
@@ -625,6 +626,8 @@ sbatch run_PCM.sh ... --method reprotm --template /path/to/my_seedmap.mat
 <p><strong>Bundled — nothing to download or verify:</strong> cifti-matlab, cifti_connectivity, figure utilities, and all network templates (including ReproTM's default template) ship inside <code>deps/</code> and <code>templates/</code>.</p>
 
 <p><strong>Not bundled — you fetch these:</strong> both methods' core code is not vendored in this repo, but both are a single script away. <code>METHOD=matlab_tm</code> (the default) needs a one-time <code>bash code/setup_matlab_tm.sh</code> (Section 2b) — fetched from its public GitHub home at a pinned commit, patched automatically, no account needed. <code>METHOD=reprotm</code> needs <code>bash code/setup_reprotm.sh</code> (Section 2c) — same idea, but with a choice of <code>--pinned</code> (default, known-good) or <code>--latest</code> (current upstream, patches applied only if still needed) since ReproTM isn't license-restricted the way matlab_tm is. Neither is an oversight — see <code>patches/template_matching_RH.patch</code> and <code>deps/reprotm/README.md</code> for why each is fetched rather than vendored. Prefer to manage ReproTM yourself instead of using the fetch script? Set <code>REPROTM_DIR</code> in cluster.conf to override the fetched default (see <code>deps/reprotm/README.md</code>) — matlab_tm doesn't currently support this, since its whole point is fetching one specific, verified source.</p>
+
+<p><strong>Install time:</strong> cloning the repo and running the one-time setup script(s) (<code>setup_matlab_tm.sh</code> and/or <code>setup_reprotm.sh</code>) is typically a few minutes on a machine with ordinary internet access — mostly <code>git clone</code> plus fetching two small upstream method repositories; there's no compilation step. This hasn't been formally benchmarked — time a clean install before quoting a number in a publication.</p>
 
 <p><strong>The method-specific externals you configure (in cluster.conf):</strong></p>
 <table>

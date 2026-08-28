@@ -10,6 +10,19 @@ reading those.
 For citation purposes (papers to cite, as opposed to license compliance), see
 **"Citing PCM and its components"** at the end.
 
+## PCM's own code
+
+PrecisionConfidenceMapping's own orchestration, MATLAB, and Python code (i.e.
+everything not listed in the tables below) is licensed under BSD 3-Clause — see
+the repo-root `LICENSE` file.
+
+**Open question worth raising with UMOTC/legal alongside the matlab_tm patent
+question:** `deps/` bundles GPLv2-licensed code directly in this repository
+(`cifti-matlab`, `deps/fieldtrip_fileio`'s `fileio` module). GPL's copyleft terms
+can have implications for what license the *combined, redistributed* repository
+can carry, separate from what license PCM's own original code is offered under.
+Not resolved here — flagging so it gets a real answer rather than an assumption.
+
 ---
 
 ## Fetched at setup time (not stored in this repo's git history)
@@ -57,11 +70,12 @@ check is still outstanding for the tools listed above.
 
 ## Citing PCM and its components
 
-If you use PCM in published work, please cite PCM itself (see `CITATION.cff` —
-not yet created as of this writing) **and** the method(s) you used:
+If you use PCM in published work, please cite PCM itself (see `CITATION.cff`)
+**and** the method(s) you used:
 
 | Method | Cite |
 |---|---|
+| PCM itself | Ramirez, J.S.B., Hermosillo, R.J.M., Moser, J. et al. Precision Confidence Mapping: An approach to determining individualized network topography with limited data. *bioRxiv* (2026). https://doi.org/10.64898/2026.08.17.744952 |
 | `matlab_tm` | Hermosillo, R.J.M., Moore, L.A., Feczko, E. et al. A precision functional atlas of personalized network topography and probabilities. *Nat Neurosci* 27, 1000–1013 (2024). https://doi.org/10.1038/s41593-024-01596-5 |
 | `reprotm` | The ReproTM paper (Godfrey et al.) — see [KateJGodfrey/ReproTM](https://github.com/KateJGodfrey/ReproTM) for the current reference |
 | Human surface visualization | The HCP minimal preprocessing pipelines paper (Glasser et al., NeuroImage 2013) and/or the Conte69 atlas paper (Van Essen et al.) — verify exact citation before use |

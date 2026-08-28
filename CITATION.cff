@@ -1,0 +1,92 @@
+cff-version: 1.2.0
+message: >-
+  If you use this software, please cite the preprint below (the PCM method and
+  this implementation) as well as the citation for whichever community
+  detection method you used (matlab_tm or reprotm) — see ATTRIBUTIONS.md.
+title: PrecisionConfidenceMapping
+type: software
+repository-code: "https://github.com/b3n3dikt/PrecisionConfidenceMapping"
+license: BSD-3-Clause
+authors:
+  - given-names: Julian S.B.
+    family-names: Ramirez
+  - given-names: Robert J.M.
+    family-names: Hermosillo
+  - given-names: Julia
+    family-names: Moser
+  - given-names: Gracie J.
+    family-names: Grimsrud
+  - given-names: Erendiz
+    family-names: Tarakci
+  - given-names: Han H. N.
+    family-names: Pham
+  - given-names: Kate J.
+    family-names: Godfrey
+  - given-names: Helayna
+    family-names: Sjoberg
+  - given-names: Vanessa
+    family-names: Morgan
+  - given-names: Thomas J.
+    family-names: Madison
+  - given-names: Timothy O.
+    family-names: Laumann
+  - given-names: Evan M.
+    family-names: Gordon
+  - given-names: Nico U.F.
+    family-names: Dosenbach
+  - given-names: Kimberly B.
+    family-names: Weldon
+  - given-names: Oscar
+    family-names: Miranda-Dominguez
+  - given-names: Brenden
+    family-names: Tervo-Clemmens
+  - given-names: Steven M.
+    family-names: Nelson
+  - given-names: Damien A.
+    family-names: Fair
+preferred-citation:
+  type: article
+  title: >-
+    Precision Confidence Mapping: An approach to determining individualized
+    network topography with limited data
+  doi: "10.64898/2026.08.17.744952"
+  journal: bioRxiv
+  year: 2026
+  date-published: 2026-08-21
+  authors:
+    - given-names: Julian S.B.
+      family-names: Ramirez
+    - given-names: Robert J.M.
+      family-names: Hermosillo
+    - given-names: Julia
+      family-names: Moser
+    - given-names: Gracie J.
+      family-names: Grimsrud
+    - given-names: Erendiz
+      family-names: Tarakci
+    - given-names: Han H. N.
+      family-names: Pham
+    - given-names: Kate J.
+      family-names: Godfrey
+    - given-names: Helayna
+      family-names: Sjoberg
+    - given-names: Vanessa
+      family-names: Morgan
+    - given-names: Thomas J.
+      family-names: Madison
+    - given-names: Timothy O.
+      family-names: Laumann
+    - given-names: Evan M.
+      family-names: Gordon
+    - given-names: Nico U.F.
+      family-names: Dosenbach
+    - given-names: Kimberly B.
+      family-names: Weldon
+    - given-names: Oscar
+      family-names: Miranda-Dominguez
+    - given-names: Brenden
+      family-names: Tervo-Clemmens
+    - given-names: Steven M.
+      family-names: Nelson
+    - given-names: Damien A.
+      family-names: Fair

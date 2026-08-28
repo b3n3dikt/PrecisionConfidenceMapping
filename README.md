@@ -33,11 +33,22 @@ parameter in `run_PCM.sh`:
 
 ## Requirements
 
+- **Operating system** — Linux (developed and tested on MSI, a SLURM-based HPC
+  cluster). PCM is not designed to run on macOS or Windows: it requires a SLURM
+  scheduler and Linux builds of MATLAB/Workbench, and its per-permutation memory
+  footprint (below) is well beyond a typical laptop regardless of OS.
 - **SLURM** — job scheduler (tested on MSI)
 - **MATLAB** — loaded via `module load matlab`
 - **Workbench** (`wb_command`) — loaded via `module load workbench`
 - **Python 3** — for permutation status checking
 - fMRI data with a `.dtseries.nii`, a motion file, and midthickness `.surf.gii` files
+
+**Install time:** cloning the repo and running the one-time setup script(s)
+(`setup_matlab_tm.sh` and/or `setup_reprotm.sh`) is typically a few minutes on a
+machine with ordinary internet access — it's mostly `git clone` plus fetching two
+small upstream method repositories; there's no compilation step. This hasn't been
+formally benchmarked — time a clean install before quoting a number in a
+publication.
 
 **Additional requirements for `METHOD=matlab_tm` (the default):**
 - **Its core code is fetched, not bundled** — `template_matching_RH.m` (R. Hermosillo / UMN) is licensed for non-profit/research use only, so PCM fetches it at setup time instead of vendoring a copy. Run once, before your first `matlab_tm` run, on a machine with internet access (not inside a SLURM job): `bash code/setup_matlab_tm.sh`. See `patches/template_matching_RH.patch` for exactly what's patched and why. `run_PCM.sh` fails fast with a reminder if you forget.
@@ -104,9 +115,31 @@ REPROTM_PYTHON="python3"            # or e.g. /home/.../miniconda3/envs/pcm/bin/
 PCM will use a `cluster.conf` in the directory where you run `sbatch` if one
 exists there, otherwise it falls back to the copy inside `PrecisionConfidenceMapping/`.
 
-### 4. Edit `run_PCM.sh`
+### 4. Set your inputs and submit
 
-Open `run_PCM.sh` and fill in the **USER SETTINGS** section with your file paths:
+**You don't need to edit `run_PCM.sh` by default.** Every required input, and
+most optional settings, can be passed as flags at submission time:
+
+```bash
+sbatch run_PCM.sh \
+    --dtseries /path/to/sub-001_ses-01_task-rest_bold.dtseries.nii \
+    --motion /path/to/motion.mat \
+    --surf-l /path/to/hemi-L_midthickness.surf.gii \
+    --surf-r /path/to/hemi-R_midthickness.surf.gii \
+    --basedir /path/to/output/PCM/sub-001/ses-01
+
+# Layer on other options as needed:
+sbatch run_PCM.sh --dtseries ... --motion ... --surf-l ... --surf-r ... --basedir ... \
+    --method reprotm --startmins 10
+```
+
+Run `bash run_PCM.sh --help` for the full flag list. `SUB`/`SES`/`TASK` are
+auto-parsed from the dtseries filename if it's BIDS-formatted; pass
+`--sub`/`--ses`/`--task` explicitly otherwise.
+
+**Prefer to edit the file instead** — e.g. you're submitting the same inputs
+repeatedly, or setting something without a flag equivalent? Open `run_PCM.sh`
+and fill in the **USER SETTINGS** section:
 
 ```bash
 # Required inputs
@@ -124,30 +157,14 @@ TASK=""   # e.g. "rest"
 METHOD="matlab_tm"   # matlab_tm | reprotm
 ```
 
+Then just run `sbatch run_PCM.sh` with no flags. Any flag passed at
+submission time overrides the corresponding setting in the file, so the two
+approaches can be mixed — e.g. set your usual defaults in the file and
+override just `--method` or `--startmins` per submission.
+
 > **Tip:** `run_PCM.sh` can live anywhere — inside `PrecisionConfidenceMapping/` or in a
 > separate study directory. If it lives elsewhere, set `PCM_DIR` at the top of
 > the file to point to your `PrecisionConfidenceMapping/` installation.
-
-### 5. Submit
-
-```bash
-# Edit USER SETTINGS in run_PCM.sh, then:
-sbatch run_PCM.sh
-
-# Or pass inputs as named flags:
-sbatch run_PCM.sh \
-    --dtseries /path/to/bold.dtseries.nii \
-    --motion /path/to/motion.mat \
-    --surf-l /path/to/hemi-L.surf.gii \
-    --surf-r /path/to/hemi-R.surf.gii \
-    --basedir /out/PCM/sub-001
-
-# Mix: set most in the file, override one flag at submission time
-sbatch run_PCM.sh --method reprotm
-sbatch run_PCM.sh --startmins 10
-```
-
-Run `bash run_PCM.sh --help` for full usage.
 
 ---
 
