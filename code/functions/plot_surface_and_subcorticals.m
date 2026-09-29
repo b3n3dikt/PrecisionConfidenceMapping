@@ -94,7 +94,11 @@ output_name = [BASEDIR '/' baseFileName]
 output_name = dscalar_name(1:end-12);
 
 %cmd = [pics_code_path ' ' scalar_name ' ' output_name '_fig ' pics_folder ' FALSE 0 0.8 JET256 FALSE 0 0 THRESHOLD_TEST_SHOW_OUTSIDE TRUE  ' make_subcortical_images ' png 8 118 TRUE ' settings.path{4} ' ' settings.path{2} ' ' settings.path{3} ' ' settings.path{5} ' ' settings.path{6}];
-cmd = [pics_code_path ' ' scalar_name ' ' output_name '_fig ' pics_folder ' FALSE ' num2str(lowerthresh) ' ' num2str(upperthresh) ' ' colorscheme ' ' threshold_image ' ' num2str(lowerthresh) ' ' num2str(upperthresh) ' ' threshold_text ' TRUE ' make_subcortical_images ' png 8 118 TRUE ' settings.path{4} ' ' settings.path{2} ' ' settings.path{3} ' ' settings.path{5} ' ' settings.path{6}];
+% Palette spans lowerthresh..upperthresh, but the display threshold starts just above
+% zero so empty vertices stay transparent (gray underlay) instead of drawing as the
+% palette's lowest colour.
+thresh_lo = max(lowerthresh, 0.0001);
+cmd = [pics_code_path ' ' scalar_name ' ' output_name '_fig ' pics_folder ' FALSE ' num2str(lowerthresh) ' ' num2str(upperthresh) ' ' colorscheme ' ' threshold_image ' ' num2str(thresh_lo) ' ' num2str(upperthresh) ' ' threshold_text ' TRUE ' make_subcortical_images ' png 8 118 TRUE ' settings.path{4} ' ' settings.path{2} ' ' settings.path{3} ' ' settings.path{5} ' ' settings.path{6}];
 disp(cmd);
 system(cmd);
 
