@@ -111,7 +111,8 @@ function threshold_confidence_maps(FIGDIR, percent_holdout, threshold_value, mak
         fpath = fullfile(FIGDIR, ...
             sprintf('Probability_Maps_across_perms_TM_Percent_holdout_%s_network_probability.dscalar.nii', network_names{i}));
         if exist(fpath, 'file')
-            n_grey = numel(cifti_read(fpath).cdata);
+            probe = cifti_read(fpath);   % MATLAB can't index .cdata onto a function call
+            n_grey = numel(probe.cdata);
             break
         end
     end

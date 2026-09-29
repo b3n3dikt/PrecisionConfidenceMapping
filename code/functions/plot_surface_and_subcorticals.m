@@ -84,7 +84,7 @@ make_subcortical_images = 'TRUE';
  
 %pics_folder = '/home/miran045/shared/projects/WashU_Nordic/MSC02_precision/whole_brain_map/restMErmnoisevols';
 %pics_folder = pwd;
-threshold_text=['inside']
+threshold_text=['THRESHOLD_TEST_SHOW_INSIDE']
 %threshold_text=['THRESHOLD_TEST_SHOW_INSIDE']
 
 pics_folder = BASEDIR;
