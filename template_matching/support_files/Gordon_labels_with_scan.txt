@@ -1,0 +1,36 @@
+Default_Mode_net
+1	255	0	0	255
+Visual_net
+2	0	0	153	255
+Frontoparietal_net
+3	255	255	0	255
+unlabelled4
+4	255	204	153	255
+Dorsal_Attention_net
+5	0	255	0	255
+unlabelled6
+6	255	153	255	255
+Ventral_Attention_net
+7	13	133	160	255
+Salience
+8	0	0	0	255
+Cingulo-Opercular_net
+9	102	0	204	255
+Sensorimotor_Medial_net
+10	102	255	255	255
+Sensorimotor_Lateral_net
+11	255	128	0	255
+Auditory_net
+12	178	102	255	255
+Temporal_Pole_net
+13	0	102	153	255
+Medial_Temporal_Lobe_net
+14	102	255	102	255
+Parietal_Medial_net
+15	60	60	251	255
+Parieto-Occipital_net
+16	239	239	239	255
+unlabelled17
+17	41	131	141	255
+Somato-cognitive-action_net
+18	142	0	103	255

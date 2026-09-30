@@ -63,12 +63,7 @@ if exist([output_cifti_name '.dconn.nii'],'file') == 0
     
     %open a new cifti file that has the subcorticals removed.
     if isempty(template_path)
-        try
-            newcii = ciftiopen(settings.path{7},path_wb_c);
-        catch
-            disp('unable to open default template path. trying to hardcoded MSI path to filefile...')
-            newcii = ciftiopen('/projects/standard/faird/shared/code/internal/utilities/community_detection/fair/supporting_files/120_LR_minsize400_recolored_manualconsensus4.dconn.nii',path_wb_c);
-        end
+        newcii = ciftiopen(settings.path{7},path_wb_c);
     else
     newcii = ciftiopen(template_path,path_wb_c);
     end

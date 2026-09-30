@@ -124,7 +124,7 @@ RUN_PERMUTATION_SCRIPT="${CODE_DIR}/code/run_permutation.sh"
 # over any copy of cifti-matlab bundled inside FUNCTIONS_DIR (e.g. BED/cifti-matlab).
 # FIELDTRIP_FILEIO_DIR is the extracted fileio/gifti/@xmltree/utilities subset
 # that interpolate_noise_for_timeseries.m needs.
-MATLAB_ADDPATH="addpath(genpath('${MATLAB_TM_DIR}')); addpath(genpath('${TM_CODE_DIR}')); addpath(genpath('${FUNCTIONS_DIR}')); addpath(genpath('${CIFTI_CONN_DIR}')); if exist('${CIFTI_CONN_DIR}/temp','dir'), rmpath(genpath('${CIFTI_CONN_DIR}/temp')); end; addpath(genpath('${FIELDTRIP_FILEIO_DIR}')); addpath(genpath('${CIFTI_MATLAB_DIR}')); addpath(genpath('${ZSCORE_DCONN_DIR}')); addpath(genpath('${OVERRIDES_DIR}'));"
+MATLAB_ADDPATH="addpath(genpath('${MATLAB_TM_DIR}')); addpath(genpath('${TM_CODE_DIR}')); addpath(genpath('${FUNCTIONS_DIR}')); addpath(genpath('${CIFTI_CONN_DIR}')); if exist('${CIFTI_CONN_DIR}/temp','dir'), rmpath(genpath('${CIFTI_CONN_DIR}/temp')); end; addpath(genpath('${FIELDTRIP_FILEIO_DIR}')); addpath(genpath('${CIFTI_MATLAB_DIR}')); addpath(genpath('${ZSCORE_DCONN_DIR}')); addpath(genpath('${OVERRIDES_DIR}')); addpath('${XCPD2DCAN_DIR}'); addpath('${INTERP_NOISE_DIR}');"
 
 # ─── wb_command ────────────────────────────────────────────────────────────────
 # We assume wb_command is on your PATH (e.g., via `module load workbench`).

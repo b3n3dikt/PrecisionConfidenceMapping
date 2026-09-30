@@ -8,8 +8,7 @@ function [cii_save_name, dropout_indices] = interpolate_noise_for_timeseries(dts
 %R. Hermosillo 10/13/2022
 %Inputs are: dtseries file = full path to the dtseriesfile
 %wb_command = full path to workbench command.
-%run_locally = Set to 1 if your running this on Robert's Desktop computer. Set to 0
-%if you're running this on MSI. (This will automatically load the necessary cifti dependencies.)
+%run_locally = unused (kept so existing callers still work).
 
 %some dependencies used by this software:
 %Gifti 1.6
@@ -17,39 +16,12 @@ function [cii_save_name, dropout_indices] = interpolate_noise_for_timeseries(dts
 %ft_read_cifti_mod - a utility that can be downloaded from the Midnight
 %Scan Clud database.
 
-%% Step 0: Add dependency paths
-%add cifti paths
-if isnumeric(run_locally) ==0
-run_locally = str2num(run_locally);
-end
-
-if run_locally ==1
-    %Some hardcodes:
-    wb_command = ('C:\Users\hermosir\Desktop\workbench\bin_windows64\wb_command');
-    addpath(genpath('C:\Users\hermosir\Documents\repos\HCP_MATLAB'));
-    addpath('C:\Users\hermosir\Documents\repos\MSCcodebase-master\Utilities\read_write_cifti\utilities')
-    addpath('C:\Users\hermosir\Documents\repos\MSCcodebase-master\Utilities\read_write_cifti\gifti')
-    addpath('C:\Users\hermosir\Documents\repos\MSCcodebase-master\Utilities\read_write_cifti\fileio')
-    %support_folder='C:\Users\hermosir\Documents\repos\support_folder';
-else
-    this_code = which('template_matching_RH');
-    [code_dir,~] = fileparts(this_code);
-    support_folder=[code_dir '/support_files']; %find support files in the code directory.
-    addpath(genpath(support_folder));
-    settings=settings_comparematrices;%
-    np=size(settings.path,2);
-    disp('Attempting to add neccesaary paths and functions.')
-    warning('off') %supress addpath warnings to nonfolders.
-    for i=1:np
-        addpath(genpath(settings.path{i}));
-    end
-    warning('on')
-    % Check if wb_command has been provided
-    if ~exist('wb_command', 'var') || isempty(wb_command)
-        % If wb_command is not provided or is empty, set the default path
-        wb_command = settings.path_wb_c; %path to wb_command
-    end
-    addpath(genpath('/projects/standard/faird/shared/code/external/utilities/MSCcodebase-master/Utilities/read_write_cifti/'));
+%% Step 0: Dependencies
+% ciftiopen/ciftisave (cifti-matlab) and ft_read_cifti_mod (fieldtrip fileio) are
+% expected to already be on the MATLAB path (PCM's config.sh MATLAB_ADDPATH adds them).
+% run_locally and outputdir are kept for call compatibility; no paths are added here.
+if ~exist('wb_command', 'var') || isempty(wb_command)
+    wb_command = 'wb_command';
 end
 
 %% Step 1 - Open timseries file
